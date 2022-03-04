@@ -6,14 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
+import com.example.githubusersearch.framework.presentation.search.composable.UserSearchBar
 import com.example.githubusersearch.framework.presentation.theme.GithubUserSearchTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -34,13 +32,14 @@ class SearchUserFragment: Fragment() {
             viewModel.searchUsers("hanna", "", "", 30, 1)
         }
 
-        return ComposeView(context = requireContext()).apply {
+        return ComposeView(requireContext()).apply {
             setContent {
                 GithubUserSearchTheme {
                     Box(modifier = Modifier.fillMaxSize()) {
-                        Text(
-                            text = users.size.toString(),
-                            style = MaterialTheme.typography.h3
+                        UserSearchBar(
+                            onUserSearch = { searchText ->
+
+                            }
                         )
                     }
                 }
