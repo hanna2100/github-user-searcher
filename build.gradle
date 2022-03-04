@@ -15,6 +15,7 @@ buildscript {
         compose_constraintlayout_version = '1.0.0'
         material_color_version = '0.0.7'
         accompanist_verison = '0.24.1-alpha'
+        retrofit_version = '2.9.0'
     }
 
     dependencies {
