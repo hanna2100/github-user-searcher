@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.business.interactors.searchuser.SearchUserInteractors
+import com.example.githubusersearch.common.extensions.subscribe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -26,7 +27,16 @@ constructor(
         perPage: Int,
         page: Int
     ) {
-        val response = searchUserInteractors.searchUsers(query, sort, order, perPage, page)
-        users.addAll(response)
+        searchUserInteractors.searchUsers(query, sort, order, perPage, page).subscribe(
+            onSuccess = {
+                users.addAll(it)
+            },
+            onError = {
+
+            },
+            onFailure = {
+
+            },
+        )
     }
 }

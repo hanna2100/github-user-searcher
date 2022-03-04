@@ -1,6 +1,7 @@
 package com.example.githubusersearch.business.data.network.abstraction
 
 import com.example.githubusersearch.business.domain.model.User
+import retrofit2.Response
 
 interface GithubDataSource {
 
@@ -10,5 +11,5 @@ interface GithubDataSource {
         order: String,
         perPage: Int,
         page: Int
-    ): List<User>
+    ): Response<List<User>>
 }

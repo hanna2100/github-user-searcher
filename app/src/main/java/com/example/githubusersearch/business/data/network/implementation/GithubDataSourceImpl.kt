@@ -4,6 +4,8 @@ import com.example.githubusersearch.business.data.network.abstraction.GithubData
 import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
 import com.example.githubusersearch.framework.datasource.network.mappers.UserDtoMapper
+import com.example.githubusersearch.framework.datasource.network.responose.UsersSearchResponse
+import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,12 +23,17 @@ constructor(
         order: String,
         perPage: Int,
         page: Int
-    ): List<User> {
+    ): Response<List<User>> {
+
         val response = githubRetrofitService.searchUsers(query, sort, order, perPage, page)
-        val users = response.users
-        val list = users.map { mapper.mapFromEntity(it) }
-        println("list size = ${list.size}")
-        return users.map { mapper.mapFromEntity(it) }
+
+        return if(response.isSuccessful) {
+            val userDtoList = response.body()!!.users
+            val userList = userDtoList.map { mapper.mapFromEntity(it) }
+            Response.success(userList)
+        } else {
+            Response.error(response.code(), response.errorBody()!!)
+        }
     }
 
 }
