@@ -12,15 +12,16 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.githubusersearch.R
 import com.example.githubusersearch.framework.presentation.theme.GithubUserSearchTheme
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    @Inject
+    lateinit var app: BaseApplication
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            GithubUserSearchTheme {
-                Box(modifier = Modifier.fillMaxSize().background(Color.Yellow))
-            }
-        }
-//        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main)
     }
 }

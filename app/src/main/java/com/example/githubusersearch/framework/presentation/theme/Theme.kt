@@ -26,7 +26,6 @@ fun GithubUserSearchTheme(
     darkSystemBar: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-
     MaterialTheme(
         colors = MyPalette,
         typography = NanumSquareTypography,
