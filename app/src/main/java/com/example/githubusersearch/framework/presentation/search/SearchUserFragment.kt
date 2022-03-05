@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
@@ -27,23 +28,33 @@ class SearchUserFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val users = viewModel.users
+        var users = viewModel.users
+        var page = viewModel.page.value
 
         viewModel.viewModelScope.launch {
-            viewModel.searchUsers("hanna", "", "", 30, 1)
+            viewModel.searchUsers("hanna", "", "", 30, page)
         }
 
         return ComposeView(requireContext()).apply {
             setContent {
                 GithubUserSearchTheme {
+                    val scope = rememberCoroutineScope()
+
                     Column(modifier = Modifier.fillMaxSize()) {
                         UserSearchBar(
                             onUserSearch = { searchText ->
 
                             }
                         )
-                        UserListView(users)
+                        UserListView(
+                            users = users,
+                            onBottomReached = {
+                                scope.launch {
+                                    page++
+                                    viewModel.searchUsers("hanna", "", "", 30, page)
+                                }
+                            }
+                        )
                     }
                 }
             }

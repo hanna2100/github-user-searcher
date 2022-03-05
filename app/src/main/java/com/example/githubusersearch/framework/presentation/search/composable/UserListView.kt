@@ -1,10 +1,13 @@
 package com.example.githubusersearch.framework.presentation.search.composable
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -21,21 +24,33 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.githubusersearch.R
 import com.example.githubusersearch.business.domain.model.User
+import com.example.githubusersearch.common.extensions.OnBottomReached
 
 @Composable
 fun UserListView(
-    users: List<User>
+    users: List<User>,
+    onBottomReached: ()->Unit
 ) {
+    val listState = rememberLazyListState()
+
     LazyColumn(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background),
+        state = listState,
     ) {
-        itemsIndexed(items = users, key = {index, item -> item.id }) { index, item ->
+        itemsIndexed(items = users) { index, item ->
             UserCard(
                 imageUrl = item.avatarUrl,
                 login = item.login
             )
         }
     }
+
+    listState.OnBottomReached {
+        onBottomReached()
+    }
+
 }
 
 @Composable
