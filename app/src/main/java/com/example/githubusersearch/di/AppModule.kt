@@ -5,7 +5,8 @@ import com.example.githubusersearch.business.data.network.abstraction.GithubData
 import com.example.githubusersearch.business.data.network.implementation.GithubDataSourceImpl
 import com.example.githubusersearch.business.interactors.searchuser.SearchUserInteractors
 import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
-import com.example.githubusersearch.framework.datasource.network.mappers.UserDtoMapper
+import com.example.githubusersearch.framework.datasource.network.mappers.UserDefaultInfoDtoMapper
+import com.example.githubusersearch.framework.datasource.network.mappers.UserDetailInfoDtoMapper
 import com.example.githubusersearch.framework.presentation.BaseApplication
 import dagger.Module
 import dagger.Provides
@@ -28,9 +29,10 @@ object AppModule {
     @Provides
     fun provideGithubDataSource(
         githubRetrofitService: GithubRetrofitService,
-        mapper: UserDtoMapper
+        mapperDefaultInfo: UserDefaultInfoDtoMapper,
+        mapperDetailInfo: UserDetailInfoDtoMapper,
     ): GithubDataSource {
-        return GithubDataSourceImpl(githubRetrofitService, mapper)
+        return GithubDataSourceImpl(githubRetrofitService, mapperDefaultInfo, mapperDetailInfo)
     }
 
     @Singleton

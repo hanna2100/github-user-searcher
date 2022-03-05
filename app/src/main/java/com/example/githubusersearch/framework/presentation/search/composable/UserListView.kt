@@ -41,8 +41,8 @@ fun UserListView(
     ) {
         itemsIndexed(items = users) { index, item ->
             UserCard(
-                imageUrl = item.avatarUrl,
-                login = item.login
+                imageUrl = item.defaultInfo.avatarUrl,
+                login = item.defaultInfo.login
             )
         }
     }

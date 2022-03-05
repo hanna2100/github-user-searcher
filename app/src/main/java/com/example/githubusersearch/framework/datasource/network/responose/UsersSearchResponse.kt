@@ -1,6 +1,6 @@
 package com.example.githubusersearch.framework.datasource.network.responose
 
-import com.example.githubusersearch.framework.datasource.network.model.UserDto
+import com.example.githubusersearch.framework.datasource.network.model.UserDefaultInfoDto
 import com.google.gson.annotations.SerializedName
 
 data class UsersSearchResponse(
@@ -12,5 +12,5 @@ data class UsersSearchResponse(
     val incompleteResults: Boolean,
 
     @SerializedName("items")
-    val users: List<UserDto>
+    val users: List<UserDefaultInfoDto>
 )

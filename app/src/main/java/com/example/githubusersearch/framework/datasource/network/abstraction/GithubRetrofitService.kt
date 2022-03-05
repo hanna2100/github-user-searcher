@@ -1,8 +1,10 @@
 package com.example.githubusersearch.framework.datasource.network.abstraction
 
+import com.example.githubusersearch.framework.datasource.network.model.UserDetailInfoDto
 import com.example.githubusersearch.framework.datasource.network.responose.UsersSearchResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface GithubRetrofitService {
@@ -16,4 +18,6 @@ interface GithubRetrofitService {
         @Query("page") page: Int
     ): Response<UsersSearchResponse>
 
+    @GET("users/{username}")
+    suspend fun getUser(@Path("username") userName: String): Response<UserDetailInfoDto>
 }

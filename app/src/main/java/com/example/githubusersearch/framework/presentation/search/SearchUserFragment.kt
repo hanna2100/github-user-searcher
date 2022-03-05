@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.rememberCoroutineScope
@@ -12,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewModelScope
 import com.example.githubusersearch.framework.presentation.search.composable.UserListView
 import com.example.githubusersearch.framework.presentation.search.composable.UserSearchBar
 import com.example.githubusersearch.framework.presentation.theme.GithubUserSearchTheme
@@ -31,7 +29,7 @@ class SearchUserFragment: Fragment() {
 
         var users = viewModel.users
         var page = viewModel.page.value
-        var query = viewModel.query.value
+        var searchText = viewModel.searchText.value
 
         return ComposeView(requireContext()).apply {
             setContent {
@@ -40,12 +38,11 @@ class SearchUserFragment: Fragment() {
 
                     Column(modifier = Modifier.fillMaxSize()) {
                         UserSearchBar(
-                            onUserSearch = { searchText ->
+                            onUserSearch = { targetText ->
                                 scope.launch {
-                                    println("searchText = $searchText")
-                                    query = searchText
+                                    searchText = targetText
                                     viewModel.clearUsers()
-                                    viewModel.searchUsers(query = query, page = page)
+                                    viewModel.searchUsers(searchText = searchText, page = page)
                                 }
                             }
                         )
@@ -54,7 +51,7 @@ class SearchUserFragment: Fragment() {
                             onBottomReached = {
                                 scope.launch {
                                     page++
-                                    viewModel.searchUsers(query = query, page = page)
+                                    viewModel.searchUsers(searchText = searchText, page = page)
                                 }
                             }
                         )

@@ -3,7 +3,8 @@ package com.example.githubusersearch.di
 import com.example.githubusersearch.common.constant.GITHUB_ACCESS_TOKEN
 import com.example.githubusersearch.common.constant.GITHUB_API_BASIC_URL
 import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
-import com.example.githubusersearch.framework.datasource.network.mappers.UserDtoMapper
+import com.example.githubusersearch.framework.datasource.network.mappers.UserDefaultInfoDtoMapper
+import com.example.githubusersearch.framework.datasource.network.mappers.UserDetailInfoDtoMapper
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -23,8 +24,14 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideUserDtoMapper(): UserDtoMapper {
-        return UserDtoMapper()
+    fun provideUserDefaultInfoDtoMapper(): UserDefaultInfoDtoMapper {
+        return UserDefaultInfoDtoMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserDetailInfoDtoMapper(): UserDetailInfoDtoMapper {
+        return UserDetailInfoDtoMapper()
     }
 
     @Singleton
