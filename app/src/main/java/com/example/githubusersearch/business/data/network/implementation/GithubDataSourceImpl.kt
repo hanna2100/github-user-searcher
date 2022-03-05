@@ -26,7 +26,6 @@ constructor(
     ): Response<List<User>> {
 
         val response = githubRetrofitService.searchUsers(query, sort, order, perPage, page)
-
         return if(response.isSuccessful) {
             val userDtoList = response.body()!!.users
             val userList = userDtoList.map { mapper.mapFromEntity(it) }

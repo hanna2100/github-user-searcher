@@ -51,9 +51,9 @@ fun UserSearchBar(
     var isOpenSearchField by remember { mutableStateOf(false) }
 
     Column (modifier = Modifier
+        .background(MaterialTheme.colors.background)
         .fillMaxWidth()
         .wrapContentHeight()
-        .clip(RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp))
         .background(
             brush = Brush.linearGradient(
                 colors = listOf(

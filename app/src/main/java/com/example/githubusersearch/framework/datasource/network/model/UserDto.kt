@@ -11,5 +11,4 @@ data class UserDto(
 
     @SerializedName("avatar_url")
     val avatarUrl: String,
-
 )

@@ -17,7 +17,7 @@ class UserDtoMapper: EntityMapper<UserDto, User> {
         return UserDto(
             id = domainModel.id,
             avatarUrl = domainModel.avatarUrl,
-            login = domainModel.login
+            login = domainModel.login,
         )
     }
 }
