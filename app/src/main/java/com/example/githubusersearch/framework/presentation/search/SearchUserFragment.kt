@@ -28,12 +28,10 @@ class SearchUserFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         var users = viewModel.users
         var page = viewModel.page.value
-
-        viewModel.viewModelScope.launch {
-            viewModel.searchUsers("hanna", "", "", 30, page)
-        }
+        var query = viewModel.query.value
 
         return ComposeView(requireContext()).apply {
             setContent {
@@ -43,7 +41,12 @@ class SearchUserFragment: Fragment() {
                     Column(modifier = Modifier.fillMaxSize()) {
                         UserSearchBar(
                             onUserSearch = { searchText ->
-
+                                scope.launch {
+                                    println("searchText = $searchText")
+                                    query = searchText
+                                    viewModel.clearUsers()
+                                    viewModel.searchUsers(query = query, page = page)
+                                }
                             }
                         )
                         UserListView(
@@ -51,7 +54,7 @@ class SearchUserFragment: Fragment() {
                             onBottomReached = {
                                 scope.launch {
                                     page++
-                                    viewModel.searchUsers("hanna", "", "", 30, page)
+                                    viewModel.searchUsers(query = query, page = page)
                                 }
                             }
                         )

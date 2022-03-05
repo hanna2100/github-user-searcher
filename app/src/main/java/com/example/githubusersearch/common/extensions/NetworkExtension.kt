@@ -17,7 +17,7 @@ suspend fun<T, R> Response<T>.subscribe(
             onSuccess(body()!!)
         }
         is400Error -> {
-            val error = Gson().fromJson(errorBody()!!.toString(), NetworkError::class.java)
+            val error = Gson().fromJson(errorBody()!!.string(), NetworkError::class.java)
             onError(error)
         }
         else -> {

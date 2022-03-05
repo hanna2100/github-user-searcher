@@ -20,25 +20,34 @@ constructor(
 ) :ViewModel() {
 
     var users = mutableStateListOf<User>()
+    var query = mutableStateOf("")
     var page = mutableStateOf(1)
 
     suspend fun searchUsers(
         query: String,
-        sort: String,
-        order: String,
-        perPage: Int,
-        page: Int
+        sort: String = "",
+        order: String = "",
+        page: Int,
     ) {
-        searchUserInteractors.searchUsers(query, sort, order, perPage, page).subscribe(
+        searchUserInteractors.searchUsers(
+            query = query,
+            sort = sort,
+            order = order,
+            page = page
+        ).subscribe(
             onSuccess = {
                 users.addAll(it)
             },
             onError = {
-
+                println("NetworkError = $it")
             },
             onFailure = {
-
+                println("HttpException = $it")
             },
         )
+    }
+
+    fun clearUsers(){
+        users.clear()
     }
 }

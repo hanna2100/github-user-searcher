@@ -159,11 +159,11 @@ fun UserSearchBar(
                             maxLines = 1,
                             keyboardActions = KeyboardActions(
                                 onDone = {
-                                    isOpenSearchField = !isOpenSearchField
                                     if (isOpenSearchField && searchText.isNotEmpty()) {
                                         keyboardController?.hide()
                                         onUserSearch(searchText)
                                     }
+                                    isOpenSearchField = !isOpenSearchField
                                 }
                             ),
                         )
@@ -171,10 +171,11 @@ fun UserSearchBar(
                     IconButton(
                         onClick = {
                             scope.launch {
-                                isOpenSearchField = !isOpenSearchField
                                 if (isOpenSearchField && searchText.isNotEmpty()) {
                                     onUserSearch(searchText)
+                                    isOpenSearchField = !isOpenSearchField
                                 } else { // 검색 텍스트 필드를 여는 경우. 키보드 자동 노출.
+                                    isOpenSearchField = !isOpenSearchField
                                     searchText = ""
                                     delay(400) // 텍스트 필드가 열리는 애니메이션 시간 기다림.
                                     focusRequester.requestFocus()

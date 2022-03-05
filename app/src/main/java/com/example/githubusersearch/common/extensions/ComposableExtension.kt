@@ -11,6 +11,9 @@ fun LazyListState.OnBottomReached(
     val shouldLoadMore = remember {
         // 다른 상태 객체에서 특정 상태가 계산되거나 파생되는 경우 derivedStateOf를 사용
         derivedStateOf {
+            if (layoutInfo.visibleItemsInfo.isEmpty()) {
+                return@derivedStateOf false
+            }
             val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()
                 ?: return@derivedStateOf true
 
