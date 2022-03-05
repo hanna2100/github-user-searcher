@@ -19,6 +19,7 @@ constructor(
     var users = mutableStateListOf<User>()
     var searchText = mutableStateOf("")
     var page = mutableStateOf(1)
+    var loading = mutableStateOf(false)
 
     suspend fun searchUsers(
         searchText: String,
@@ -27,6 +28,8 @@ constructor(
         page: Int,
     ) {
         val usernameQuery = "$searchText in:login"
+        loading.value = true
+        println("vm loading = ${loading.value}")
         searchUserInteractors.searchUsers(
             query = usernameQuery,
             sort = sort,
@@ -35,12 +38,16 @@ constructor(
         ).subscribe(
             onSuccess = {
                 users.addAll(it)
+                loading.value = false
+                println("vm loading = ${loading.value}")
             },
             onError = {
                 println("NetworkError = $it")
+                loading.value = false
             },
             onFailure = {
                 println("HttpException = $it")
+                loading.value = false
             },
         )
     }

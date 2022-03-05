@@ -27,15 +27,14 @@ class SearchUserFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        var users = viewModel.users
-        var page = viewModel.page.value
-        var searchText = viewModel.searchText.value
-
         return ComposeView(requireContext()).apply {
             setContent {
                 GithubUserSearchTheme {
-                    val scope = rememberCoroutineScope()
+                    var users = viewModel.users
+                    var page = viewModel.page.value
+                    var searchText = viewModel.searchText.value
 
+                    val scope = rememberCoroutineScope()
                     Column(modifier = Modifier.fillMaxSize()) {
                         UserSearchBar(
                             onUserSearch = { targetText ->
@@ -48,6 +47,7 @@ class SearchUserFragment: Fragment() {
                         )
                         UserListView(
                             users = users,
+                            loading = viewModel.loading.value,
                             onBottomReached = {
                                 scope.launch {
                                     page++
