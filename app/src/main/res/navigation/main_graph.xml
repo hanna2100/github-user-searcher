@@ -8,6 +8,24 @@
         android:id="@+id/searchUserFragment"
         android:name="com.example.githubusersearch.framework.presentation.search.SearchUserFragment"
         android:label="SearchUserFragment">
+        <action
+            android:id="@+id/action_searchUserFragment_to_userDetailFragment"
+            app:destination="@id/userDetailFragment"
+            app:enterAnim="@anim/slide_out_right"
+            app:exitAnim="@anim/slide_in_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userDetailFragment"
+        android:name="com.example.githubusersearch.framework.presentation.userdetail.UserDetailFragment"
+        android:label="UserDetailFragment">
+        <argument android:name="userName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_userDetailFragment_to_searchUserFragment"
+            app:destination="@id/searchUserFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_left"/>
     </fragment>
 
 </navigation>

@@ -48,6 +48,9 @@ class SearchUserFragment: Fragment() {
                         UserListView(
                             users = users,
                             loading = viewModel.loading.value,
+                            onUserClick = { userName ->
+                                viewModel.moveToUserDetailFragment(this@SearchUserFragment.view, userName)
+                            },
                             onBottomReached = {
                                 scope.launch {
                                     page++

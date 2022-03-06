@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.LocalRippleTheme
@@ -43,6 +44,7 @@ import com.example.githubusersearch.framework.presentation.theme.DarkRippleTheme
 fun UserListView(
     users: List<User>,
     loading: Boolean,
+    onUserClick: (String) -> Unit,
     onBottomReached: ()->Unit
 ) {
     val listState = rememberLazyListState()
@@ -54,7 +56,8 @@ fun UserListView(
                 itemsIndexed(items = users) { index, item ->
                     UserCard(
                         imageUrl = item.defaultInfo.avatarUrl,
-                        login = item.defaultInfo.login
+                        login = item.defaultInfo.login,
+                        onUserClick = onUserClick,
                     )
                 }
             }
@@ -100,10 +103,12 @@ fun UserListView(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UserCard(
     imageUrl: String,
     login: String,
+    onUserClick: (String) -> Unit
 ) {
     val animatedProgress = remember { Animatable(initialValue = 200f) }
     LaunchedEffect(Unit) {
@@ -117,12 +122,13 @@ fun UserCard(
             .fillMaxWidth()
             .heightIn(min = 100.dp)
             .graphicsLayer(translationX = animatedProgress.value),
-        backgroundColor = MaterialTheme.colors.background
+        backgroundColor = MaterialTheme.colors.background,
+        onClick = {
+            onUserClick(login)
+        }
     ) {
         Row(
-            modifier = Modifier
-                .clickable { }
-                .padding(10.dp),
+            modifier = Modifier.padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             val defaultImg = R.drawable.profile_img

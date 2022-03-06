@@ -1,8 +1,10 @@
 package com.example.githubusersearch.framework.presentation.search
 
+import android.view.View
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.navigation.findNavController
 import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.business.interactors.searchuser.SearchUserInteractors
 import com.example.githubusersearch.common.extensions.subscribe
@@ -54,5 +56,11 @@ constructor(
 
     fun clearUsers(){
         users.clear()
+    }
+
+    fun moveToUserDetailFragment(view: View?, userName: String) {
+        val action = SearchUserFragmentDirections
+            .actionSearchUserFragmentToUserDetailFragment(userName)
+        view?.findNavController()?.navigate(action)
     }
 }
