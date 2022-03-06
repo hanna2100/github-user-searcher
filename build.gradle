@@ -12,7 +12,7 @@ buildscript {
         constraint_layout = '2.1.0'
         hilt_version = '2.38.1'
         room_compiler_version = '2.4.1'
-        compose_constraintlayout_version = '1.0.0'
+        compose_constraintlayout_version = '1.0.0-rc01'
         material_color_version = '0.0.7'
         accompanist_verison = '0.24.1-alpha'
         retrofit_version = '2.9.0'
