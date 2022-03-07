@@ -19,7 +19,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
@@ -94,7 +93,7 @@ fun UserSearchBar(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.github_icon),
+                        painter = painterResource(id = R.drawable.ic_github_icon),
                         contentDescription = "",
                         colorFilter = tint(MaterialTheme.colors.onPrimary),
                         modifier = Modifier.size(50.dp)

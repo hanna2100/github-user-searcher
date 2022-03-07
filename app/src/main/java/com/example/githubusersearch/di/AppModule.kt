@@ -6,6 +6,7 @@ import com.example.githubusersearch.business.data.network.implementation.GithubD
 import com.example.githubusersearch.business.interactors.searchuser.SearchUserInteractors
 import com.example.githubusersearch.business.interactors.userdetail.UserDetailInteractors
 import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
+import com.example.githubusersearch.framework.datasource.network.mappers.RepositoryMapper
 import com.example.githubusersearch.framework.datasource.network.mappers.UserDefaultInfoDtoMapper
 import com.example.githubusersearch.framework.datasource.network.mappers.UserDetailInfoDtoMapper
 import com.example.githubusersearch.framework.presentation.BaseApplication
@@ -32,8 +33,9 @@ object AppModule {
         githubRetrofitService: GithubRetrofitService,
         mapperDefaultInfo: UserDefaultInfoDtoMapper,
         mapperDetailInfo: UserDetailInfoDtoMapper,
+        repositoryMapper: RepositoryMapper,
     ): GithubDataSource {
-        return GithubDataSourceImpl(githubRetrofitService, mapperDefaultInfo, mapperDetailInfo)
+        return GithubDataSourceImpl(githubRetrofitService, mapperDefaultInfo, mapperDetailInfo, repositoryMapper)
     }
 
     @Singleton

@@ -5,7 +5,16 @@
       <map>
         <entry key="../../../../layout/compose-model-1646462110671.xml" value="0.14634146341463414" />
         <entry key="../../../../layout/compose-model-1646465832257.xml" value="0.23441734417344173" />
+        <entry key="../../../../layout/compose-model-1646670616907.xml" value="0.625" />
+        <entry key="../../../../layout/compose-model-1646672583975.xml" value="0.4388888888888889" />
+        <entry key="../../../../layout/compose-model-1646675639297.xml" value="0.375" />
+        <entry key="app/src/main/res/drawable/c_sharp.xml" value="0.212" />
         <entry key="app/src/main/res/drawable/ic_android_black_24dp.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_c.xml" value="0.212" />
+        <entry key="app/src/main/res/drawable/ic_c_sharp.xml" value="0.212" />
+        <entry key="app/src/main/res/drawable/ic_default_lang_img.xml" value="0.212" />
+        <entry key="app/src/main/res/drawable/ic_go.xml" value="0.212" />
+        <entry key="app/src/main/res/drawable/ic_perl.xml" value="0.212" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.29393115942028986" />
       </map>
     </option>

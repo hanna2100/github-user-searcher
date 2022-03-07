@@ -2,15 +2,18 @@ package com.example.githubusersearch.framework.presentation.userdetail
 
 import android.content.Context
 import android.view.View
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.toBitmap
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.findNavController
 import androidx.palette.graphics.Palette
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
+import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.business.interactors.userdetail.UserDetailInteractors
 import com.example.githubusersearch.common.extensions.subscribe
@@ -26,6 +29,8 @@ constructor(
 
     var isDarkImage = mutableStateOf(false)
     var user = mutableStateOf(User.getEmptyUser())
+//    var repositories = mutableStateListOf<Repository>()
+    var repositories = mutableStateOf<List<Repository>>(listOf())
 
     fun moveToSearchUserFragment(view: View?) {
         val action = UserDetailFragmentDirections
@@ -47,7 +52,7 @@ constructor(
             Palette.from(bitmap).generate { palette ->
                 val rgb = palette?.dominantSwatch?.rgb
                 rgb?.let {
-                    isDarkImage.value = ColorUtils.calculateLuminance(it) < 0.5
+                    isDarkImage.value = ColorUtils.calculateLuminance(it) < 0.4
                 }
             }
         }
@@ -67,4 +72,18 @@ constructor(
         )
     }
 
+    suspend fun getRepositories(userName: String) {
+        userDetailInteractors.getRepositories(userName).subscribe(
+            onSuccess = {
+//                repositories.addAll(it)
+                repositories.value = it
+            },
+            onError = {
+                println("getRepositories onError $it")
+            },
+            onFailure = {
+                println("getRepositories onFailure $it")
+            }
+        )
+    }
 }

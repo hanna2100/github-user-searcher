@@ -33,12 +33,15 @@ class UserDetailFragment: Fragment() {
     ): View? {
 
         viewModel.viewModelScope.launch {
-            getUserInfo()
+            viewModel.getUser(getUserName())
             viewModel.checkAvatarImgIsDark(
                 context = requireContext(),
                 avatarImgUrl = viewModel.user.value.defaultInfo.avatarUrl
             )
-            println("viewModel.isDarkImage.value = ${viewModel.isDarkImage.value}")
+        }
+
+        viewModel.viewModelScope.launch {
+            viewModel.getRepositories(getUserName())
         }
 
         return ComposeView(requireContext()).apply {
@@ -46,6 +49,8 @@ class UserDetailFragment: Fragment() {
                 GithubUserSearchTheme {
                     val isDarkAvatar = viewModel.isDarkImage.value
                     val user = viewModel.user.value
+                    val repositories = viewModel.repositories.value
+
                     Column(modifier = Modifier
                         .fillMaxSize()
                         .background(Color.Black)
@@ -55,7 +60,8 @@ class UserDetailFragment: Fragment() {
                                 viewModel.moveToSearchUserFragment(this@UserDetailFragment.view)
                             },
                             textColorOverAvatar = if (isDarkAvatar) Color.White else Color.Black,
-                            user = user
+                            user = user,
+                            repositories = repositories?: emptyList()
                         )
                     }
                 }
@@ -63,10 +69,9 @@ class UserDetailFragment: Fragment() {
         }
     }
 
-    private suspend fun getUserInfo() {
+    private fun getUserName(): String {
         val args: UserDetailFragmentArgs by navArgs()
-        val userName = args.userName
-        viewModel.getUser(userName)
+        return args.userName
     }
 
 }

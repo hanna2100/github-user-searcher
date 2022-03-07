@@ -19,10 +19,10 @@ private val MyPalette = darkColors(
     onSecondary = White,
     error = MaximumRed,
     onError = White,
-    background = White,
-    onBackground = SmokyBlack,
-    surface = White,
-    onSurface = SmokyBlack,
+    background = CetaceanBlue,
+    onBackground = White,
+    surface = Color.Black,
+    onSurface = White,
 )
 
 @Composable
@@ -37,17 +37,17 @@ fun GithubUserSearchTheme(
         content = content
     )
 
-    val systemUiController = rememberSystemUiController()
-    SideEffect {
-        systemUiController.setStatusBarColor(
-            color = PatrickBlue,
-            darkIcons = false
-        )
-        systemUiController.setNavigationBarColor(
-            color = White,
-            darkIcons = darkSystemBar
-        )
-    }
+//    val systemUiController = rememberSystemUiController()
+//    SideEffect {
+//        systemUiController.setStatusBarColor(
+//            color = PatrickBlue,
+//            darkIcons = false
+//        )
+//        systemUiController.setNavigationBarColor(
+//            color = White,
+//            darkIcons = darkSystemBar
+//        )
+//    }
 }
 
 object DarkRippleTheme: RippleTheme {

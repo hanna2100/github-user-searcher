@@ -1,19 +1,17 @@
 package com.example.githubusersearch.framework.presentation.userdetail.composable
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.RawRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -25,7 +23,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -37,16 +34,12 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.MotionLayout
-import androidx.core.graphics.ColorUtils
-import androidx.palette.graphics.Palette
-import coil.ImageLoader
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.githubusersearch.R
+import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.business.domain.model.User
+import com.example.githubusersearch.common.composable.loadImage
 import com.example.githubusersearch.common.extensions.toSince
 import com.example.githubusersearch.framework.presentation.theme.NanumSquareFamily
-import kotlinx.coroutines.launch
 
 enum class SwipingStates {
     EXPANDED,
@@ -59,6 +52,7 @@ fun CollapsableToolbar(
     textColorOverAvatar: Color,
     user: User,
     onBackButtonClick: () -> Unit,
+    repositories: List<Repository>
 ) {
 
     val swipingState = rememberSwipeableState(initialValue = SwipingStates.EXPANDED)
@@ -127,7 +121,7 @@ fun CollapsableToolbar(
                     textColorOverAvatar = textColorOverAvatar,
                     onBackButtonClick = onBackButtonClick
                 ) {
-                    ScrollableContent(collapsedContentHeight)
+                    RepositoryListView(collapsedContentHeight, repositories)
                 }
             }
 
@@ -145,11 +139,98 @@ fun MotionComposeHeader(
     scrollableBody: @Composable (BoxScope)->Unit
 ) {
 
+    @Composable
+    fun IconText(@DrawableRes @RawRes res: Int, text: String) {
+        Row(
+            modifier = Modifier.padding(10.dp, 1.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = res),
+                contentDescription = text,
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f)
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                text = text,
+                style = MaterialTheme.typography.body2.copy(
+                    color = MaterialTheme.colors.onPrimary
+                )
+            )
+        }
+    }
+
+    @Composable
+    fun BioText(text: String) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(10.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(MaterialTheme.colors.primary.copy(red = 0.2f, green = 0.21f, blue = 0.23f))
+            ,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.button,
+                modifier = Modifier.padding(10.dp),
+                color = MaterialTheme.colors.onPrimary
+            )
+        }
+    }
+
+
+    @Composable
+    fun IconFollowerFollowingText(follower: Int, following: Int) {
+        Row(
+            modifier = Modifier.padding(10.dp, 1.dp, 10.dp, 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_person),
+                contentDescription = "팔로우 팔로워",
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f)
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                text = follower.toString(),
+                style = MaterialTheme.typography.body2.copy(
+                    color = MaterialTheme.colors.onPrimary
+                )
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                text = "Followers",
+                style = MaterialTheme.typography.body2.copy(
+                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f)
+                )
+            )
+            Spacer(modifier = Modifier.size(10.dp))
+            Text(
+                text = following.toString(),
+                style = MaterialTheme.typography.body2.copy(
+                    color = MaterialTheme.colors.onPrimary
+                )
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                text = "Followings",
+                style = MaterialTheme.typography.body2.copy(
+                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f)
+                )
+            )
+        }
+    }
+
     MotionLayout(
         start = startConstraintSet(),
         end = endConstraintSet(collapsedContentHeight),
         progress = progress,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -173,21 +254,16 @@ fun MotionComposeHeader(
             )
         }
 
-        val request = ImageRequest.Builder(LocalContext.current)
-            .data(user.defaultInfo.avatarUrl)
-            .crossfade(true)
-            .build()
-
-        AsyncImage(
-            model = request,
-            placeholder = painterResource(id = R.drawable.profile_img),
+        loadImage(
+            imageUrl = user.defaultInfo.avatarUrl,
             contentDescription = "프로필 이미지",
+            placeholderResource = R.drawable.profile_img,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .layoutId("userAvatar")
                 .fillMaxWidth()
                 .height(200.dp)
-                .clip(RoundedCornerShape((progress * 6).dp)),
+                .clip(RoundedCornerShape((progress * 6).dp))
         )
 
         val useLoginTextSize = ((2f - progress) * 10 + 10).sp
@@ -237,98 +313,13 @@ fun MotionComposeHeader(
             )
         }
 
-        Box(Modifier.layoutId("content")) {
+        Box(
+            Modifier.layoutId("content")
+        ) {
             scrollableBody(this)
         }
     }
 }
-
-@Composable
-fun BioText(text: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(10.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colors.primary.copy(red = 0.2f, green = 0.21f, blue = 0.23f))
-        ,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.button,
-            modifier = Modifier.padding(10.dp),
-            color = MaterialTheme.colors.onPrimary
-        )
-    }
-}
-
-@Composable
-fun IconText(@DrawableRes res: Int, text: String) {
-    Row(
-        modifier = Modifier.padding(10.dp, 1.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(id = res),
-            contentDescription = text,
-            modifier = Modifier.size(20.dp),
-            tint = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f)
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-        Text(
-            text = text,
-            style = MaterialTheme.typography.body2.copy(
-                color = MaterialTheme.colors.onPrimary
-            )
-        )
-    }
-}
-
-@Composable
-fun IconFollowerFollowingText(follower: Int, following: Int) {
-    Row(
-        modifier = Modifier.padding(10.dp, 1.dp, 10.dp, 10.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_person),
-            contentDescription = "팔로우 팔로워",
-            modifier = Modifier.size(20.dp),
-            tint = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f)
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-        Text(
-            text = follower.toString(),
-            style = MaterialTheme.typography.body2.copy(
-                color = MaterialTheme.colors.onPrimary
-            )
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-        Text(
-            text = "Followers",
-            style = MaterialTheme.typography.body2.copy(
-                color = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f)
-            )
-        )
-        Spacer(modifier = Modifier.size(10.dp))
-        Text(
-            text = following.toString(),
-            style = MaterialTheme.typography.body2.copy(
-                color = MaterialTheme.colors.onPrimary
-            )
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-        Text(
-            text = "Followings",
-            style = MaterialTheme.typography.body2.copy(
-                color = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f)
-            )
-        )
-    }
-}
-
 private fun startConstraintSet() = ConstraintSet {
     val userDetailBox = createRefFor("userDetailBox")
     val userAvatar = createRefFor("userAvatar")
@@ -412,42 +403,5 @@ private fun endConstraintSet(collapsedContentHeight: Dp) = ConstraintSet {
         top.linkTo(userDetailBox.bottom, 8.dp)
         start.linkTo(parent.start)
         end.linkTo(parent.end)
-    }
-}
-
-@Composable
-internal fun ScrollableContent(collapsedContentHeight: Dp) {
-    val list = listOf(1..20).flatten()
-    LazyColumn(
-        Modifier.padding(
-            bottom = collapsedContentHeight
-        )
-    ) {
-        items(
-            items = list,
-            itemContent = { id ->
-                ScrollableContentItem(id = id.toString())
-            },
-        )
-    }
-}
-
-@Composable
-private fun ScrollableContentItem(id: String) {
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .height(100.dp)
-        .padding(16.dp),
-        backgroundColor = MaterialTheme.colors.surface,
-        elevation = 4.dp
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Text(
-                text = "Item $id",
-                color = MaterialTheme.colors.onSurface,
-                style = MaterialTheme.typography.h5
-            )
-        }
-
     }
 }

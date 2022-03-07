@@ -3,6 +3,7 @@ package com.example.githubusersearch.di
 import com.example.githubusersearch.common.constant.GITHUB_ACCESS_TOKEN
 import com.example.githubusersearch.common.constant.GITHUB_API_BASIC_URL
 import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
+import com.example.githubusersearch.framework.datasource.network.mappers.RepositoryMapper
 import com.example.githubusersearch.framework.datasource.network.mappers.UserDefaultInfoDtoMapper
 import com.example.githubusersearch.framework.datasource.network.mappers.UserDetailInfoDtoMapper
 import com.google.gson.GsonBuilder
@@ -32,6 +33,12 @@ object NetworkModule {
     @Provides
     fun provideUserDetailInfoDtoMapper(): UserDetailInfoDtoMapper {
         return UserDetailInfoDtoMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun provideRepositoryMapper(): RepositoryMapper {
+        return RepositoryMapper()
     }
 
     @Singleton
