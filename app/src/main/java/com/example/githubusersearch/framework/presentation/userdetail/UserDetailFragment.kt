@@ -14,8 +14,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import com.example.githubusersearch.framework.presentation.theme.GithubUserSearchTheme
+import com.example.githubusersearch.framework.presentation.userdetail.composable.CollapsableToolbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class UserDetailFragment: Fragment() {
@@ -27,19 +30,26 @@ class UserDetailFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        viewModel.viewModelScope.launch {
+            viewModel.checkAvatarImgIsDark(requireContext())
+            println("viewModel.isDarkImage.value = ${viewModel.isDarkImage.value}")
+        }
+
         return ComposeView(requireContext()).apply {
             setContent {
                 GithubUserSearchTheme {
+                    val isDarkAvatar = viewModel.isDarkImage.value
+
                     Column(modifier = Modifier
                         .fillMaxSize()
                         .background(Color.Black)
                     ) {
-                        Button(onClick = {
-                            viewModel.moveToSearchUserFragment(this@UserDetailFragment.view)
-                        }) {
-                            Text("버튼")
-                        }
-
+                        CollapsableToolbar(
+                            onBackButtonClick = {
+                                viewModel.moveToSearchUserFragment(this@UserDetailFragment.view)
+                            },
+                            textColorOverAvatar = if (isDarkAvatar) Color.White else Color.Black
+                        )
                     }
                 }
             }

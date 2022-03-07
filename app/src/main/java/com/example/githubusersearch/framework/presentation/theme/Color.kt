@@ -1,9 +1,9 @@
 package com.example.githubusersearch.framework.presentation.theme
 
 import androidx.compose.ui.graphics.Color
-val PatrickBlue = Color(0xFF1a237e)
+val PatrickBlue = Color(0xFF28292C)
 val PlumpPurple = Color(0xFF534bae)
-val CetaceanBlue = Color(0xFF000051)
+val CetaceanBlue = Color(0xFF202124)
 val VioletsAreBlue = Color(0xFF7c4dff)
 val Lavender = Color(0xFFb47cff)
 val InterdimensionalBlue= Color(0xFF3f1dcb)
