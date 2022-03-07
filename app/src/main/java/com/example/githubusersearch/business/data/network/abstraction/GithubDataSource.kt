@@ -12,4 +12,6 @@ interface GithubDataSource {
         perPage: Int,
         page: Int
     ): Response<List<User>>
+
+    suspend fun getUser(userName: String): Response<User>
 }

@@ -2,31 +2,30 @@ package com.example.githubusersearch.framework.presentation.userdetail
 
 import android.content.Context
 import android.view.View
-import androidx.annotation.ColorInt
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
 import androidx.palette.graphics.Palette
-import coil.Coil
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import com.example.githubusersearch.business.interactors.searchuser.SearchUserInteractors
+import com.example.githubusersearch.business.domain.model.User
+import com.example.githubusersearch.business.interactors.userdetail.UserDetailInteractors
+import com.example.githubusersearch.common.extensions.subscribe
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class UserDetailViewModel
 @Inject
 constructor(
-    private val searchUserInteractors: SearchUserInteractors
+    private val userDetailInteractors: UserDetailInteractors
 ) : ViewModel() {
 
     var isDarkImage = mutableStateOf(false)
+    var user = mutableStateOf(User.getEmptyUser())
 
     fun moveToSearchUserFragment(view: View?) {
         val action = UserDetailFragmentDirections
@@ -34,12 +33,10 @@ constructor(
         view?.findNavController()?.navigate(action)
     }
 
-    suspend fun checkAvatarImgIsDark(context: Context) {
-        val imageUrl = "https://img2.sbs.co.kr/img/sbs_cms/PG/2019/08/07/PG32010102_w640_h360.jpg"
-
+    suspend fun checkAvatarImgIsDark(context: Context, avatarImgUrl: String) {
         val imageLoader = context.imageLoader
         val req = ImageRequest.Builder(context)
-            .data(imageUrl)
+            .data(avatarImgUrl)
             .allowHardware(false)
             .build()
 
@@ -54,6 +51,20 @@ constructor(
                 }
             }
         }
+    }
+
+    suspend fun getUser(userName: String) {
+        userDetailInteractors.getUser(userName).subscribe(
+            onSuccess = {
+                user.value = it
+            },
+            onError = {
+
+            },
+            onFailure = {
+
+            }
+        )
     }
 
 }

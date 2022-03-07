@@ -17,10 +17,12 @@ class UserDetailInfoDtoMapper: EntityMapper<UserDetailInfoDto, User> {
             detailInfo = DetailInfo(
                 followers = entity.followers,
                 following = entity.following,
-                name = entity.name,
-                location = entity.location,
-                email = entity.email,
-                reposUrl = entity.reposUrl
+                name = entity.name?: "N/A",
+                location = entity.location?: "N/A",
+                email = entity.email?: "N/A",
+                bio = entity.bio?: "N/A",
+                blog = entity.blog?: "N/A",
+                createAt = entity.createAt
             )
         )
     }
@@ -35,7 +37,9 @@ class UserDetailInfoDtoMapper: EntityMapper<UserDetailInfoDto, User> {
             name = domainModel.detailInfo?.name?: "",
             location = domainModel.detailInfo?.location?: "",
             email = domainModel.detailInfo?.email?: "",
-            reposUrl = domainModel.detailInfo?.reposUrl?: ""
+            bio = domainModel.detailInfo?.bio?: "",
+            blog = domainModel.detailInfo?.blog?: "",
+            createAt = domainModel.detailInfo?.createAt?: ""
         )
     }
 }

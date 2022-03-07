@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.githubusersearch.business.data.network.abstraction.GithubDataSource
 import com.example.githubusersearch.business.data.network.implementation.GithubDataSourceImpl
 import com.example.githubusersearch.business.interactors.searchuser.SearchUserInteractors
+import com.example.githubusersearch.business.interactors.userdetail.UserDetailInteractors
 import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
 import com.example.githubusersearch.framework.datasource.network.mappers.UserDefaultInfoDtoMapper
 import com.example.githubusersearch.framework.datasource.network.mappers.UserDetailInfoDtoMapper
@@ -42,5 +43,14 @@ object AppModule {
     ): SearchUserInteractors {
         return SearchUserInteractors(githubDataSource)
     }
+
+    @Singleton
+    @Provides
+    fun provideUserDetailInteractors(
+        githubDataSource: GithubDataSource
+    ): UserDetailInteractors {
+        return UserDetailInteractors(githubDataSource)
+    }
+
 
 }

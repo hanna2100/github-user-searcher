@@ -43,6 +43,8 @@ import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.githubusersearch.R
+import com.example.githubusersearch.business.domain.model.User
+import com.example.githubusersearch.common.extensions.toSince
 import com.example.githubusersearch.framework.presentation.theme.NanumSquareFamily
 import kotlinx.coroutines.launch
 
@@ -55,6 +57,7 @@ enum class SwipingStates {
 @Composable
 fun CollapsableToolbar(
     textColorOverAvatar: Color,
+    user: User,
     onBackButtonClick: () -> Unit,
 ) {
 
@@ -114,6 +117,7 @@ fun CollapsableToolbar(
 
             Column {
                 MotionComposeHeader(
+                    user = user,
                     progress = if (swipingState.progress.to == SwipingStates.COLLAPSED) {
                         swipingState.progress.fraction
                     } else {
@@ -133,6 +137,7 @@ fun CollapsableToolbar(
 
 @Composable
 fun MotionComposeHeader(
+    user: User,
     progress: Float,
     collapsedContentHeight: Dp,
     textColorOverAvatar: Color,
@@ -150,7 +155,7 @@ fun MotionComposeHeader(
             modifier = Modifier
                 .layoutId("userDetailBox")
                 .fillMaxWidth()
-                .height(355.dp)
+                .wrapContentHeight()
                 .background(MaterialTheme.colors.primary)
                 .alpha(1f - progress)
         ) {
@@ -158,16 +163,18 @@ fun MotionComposeHeader(
                 .fillMaxWidth()
                 .height(200.dp * (1 - progress) + (collapsedContentHeight * progress)))
 
-            BioText("Hello world")
-            IconText(R.drawable.ic_link, "https://github.com/blog")
-            IconText(R.drawable.ic_location_city, "San Francisco")
-            IconText(R.drawable.ic_celebration, "2008-01-14T04:33:35Z")
-            IconFollowerFollowingText(20, 1)
+            BioText(user.detailInfo?.bio?: "")
+            IconText(R.drawable.ic_link, user.detailInfo?.blog?: "")
+            IconText(R.drawable.ic_location_city, user.detailInfo?.location?: "")
+            IconText(R.drawable.ic_celebration, user.detailInfo?.createAt?.toSince()?: "")
+            IconFollowerFollowingText(
+                user.detailInfo?.followers?: 0,
+                user.detailInfo?.following?: 0
+            )
         }
 
-        val imageUrl = "https://img2.sbs.co.kr/img/sbs_cms/PG/2019/08/07/PG32010102_w640_h360.jpg"
         val request = ImageRequest.Builder(LocalContext.current)
-            .data(imageUrl)
+            .data(user.defaultInfo.avatarUrl)
             .crossfade(true)
             .build()
 
@@ -193,7 +200,7 @@ fun MotionComposeHeader(
         )
 
         Text(
-            text = "유저 아이디",
+            text = user.defaultInfo.login,
             modifier = Modifier
                 .layoutId("userLogin"),
             style = TextStyle(
@@ -204,7 +211,7 @@ fun MotionComposeHeader(
             )
         )
         Text(
-            text = "유저 이름",
+            text = user.detailInfo?.name?: "",
             modifier = Modifier
                 .layoutId("userName")
                 .alpha(1 - progress)
@@ -241,7 +248,7 @@ fun BioText(text: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(55.dp)
+            .wrapContentHeight()
             .padding(10.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(MaterialTheme.colors.primary.copy(red = 0.2f, green = 0.21f, blue = 0.23f))
@@ -251,7 +258,7 @@ fun BioText(text: String) {
         Text(
             text = text,
             style = MaterialTheme.typography.button,
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(10.dp),
             color = MaterialTheme.colors.onPrimary
         )
     }
@@ -272,7 +279,7 @@ fun IconText(@DrawableRes res: Int, text: String) {
         Spacer(modifier = Modifier.size(8.dp))
         Text(
             text = text,
-            style = MaterialTheme.typography.caption.copy(
+            style = MaterialTheme.typography.body2.copy(
                 color = MaterialTheme.colors.onPrimary
             )
         )
@@ -282,7 +289,7 @@ fun IconText(@DrawableRes res: Int, text: String) {
 @Composable
 fun IconFollowerFollowingText(follower: Int, following: Int) {
     Row(
-        modifier = Modifier.padding(10.dp, 1.dp),
+        modifier = Modifier.padding(10.dp, 1.dp, 10.dp, 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -294,28 +301,28 @@ fun IconFollowerFollowingText(follower: Int, following: Int) {
         Spacer(modifier = Modifier.size(8.dp))
         Text(
             text = follower.toString(),
-            style = MaterialTheme.typography.caption.copy(
+            style = MaterialTheme.typography.body2.copy(
                 color = MaterialTheme.colors.onPrimary
             )
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
             text = "Followers",
-            style = MaterialTheme.typography.caption.copy(
+            style = MaterialTheme.typography.body2.copy(
                 color = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f)
             )
         )
         Spacer(modifier = Modifier.size(10.dp))
         Text(
             text = following.toString(),
-            style = MaterialTheme.typography.caption.copy(
+            style = MaterialTheme.typography.body2.copy(
                 color = MaterialTheme.colors.onPrimary
             )
         )
         Spacer(modifier = Modifier.size(8.dp))
         Text(
             text = "Followings",
-            style = MaterialTheme.typography.caption.copy(
+            style = MaterialTheme.typography.body2.copy(
                 color = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f)
             )
         )

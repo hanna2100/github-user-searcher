@@ -3,6 +3,7 @@ package com.example.githubusersearch.framework.datasource.network.model
 import com.google.gson.annotations.SerializedName
 
 data class UserDetailInfoDto(
+
     @SerializedName("login")
     val login: String,
 
@@ -18,15 +19,23 @@ data class UserDetailInfoDto(
     @SerializedName("following")
     val following: Int,
 
-    @SerializedName("repos_url")
-    val reposUrl: String,
-
     @SerializedName("name")
-    val name: String,
+    val name: String?,
 
     @SerializedName("location")
-    val location: String,
+    val location: String?,
 
     @SerializedName("email")
-    val email: String,
-)
+    val email: String?,
+
+    @SerializedName("bio")
+    val bio: String?,
+
+    @SerializedName("blog")
+    val blog: String?,
+
+    @SerializedName("created_at")
+    val createAt: String,
+
+
+    )

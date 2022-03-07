@@ -15,9 +15,11 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.navArgs
 import com.example.githubusersearch.framework.presentation.theme.GithubUserSearchTheme
 import com.example.githubusersearch.framework.presentation.userdetail.composable.CollapsableToolbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -31,7 +33,11 @@ class UserDetailFragment: Fragment() {
     ): View? {
 
         viewModel.viewModelScope.launch {
-            viewModel.checkAvatarImgIsDark(requireContext())
+            getUserInfo()
+            viewModel.checkAvatarImgIsDark(
+                context = requireContext(),
+                avatarImgUrl = viewModel.user.value.defaultInfo.avatarUrl
+            )
             println("viewModel.isDarkImage.value = ${viewModel.isDarkImage.value}")
         }
 
@@ -39,7 +45,7 @@ class UserDetailFragment: Fragment() {
             setContent {
                 GithubUserSearchTheme {
                     val isDarkAvatar = viewModel.isDarkImage.value
-
+                    val user = viewModel.user.value
                     Column(modifier = Modifier
                         .fillMaxSize()
                         .background(Color.Black)
@@ -48,12 +54,19 @@ class UserDetailFragment: Fragment() {
                             onBackButtonClick = {
                                 viewModel.moveToSearchUserFragment(this@UserDetailFragment.view)
                             },
-                            textColorOverAvatar = if (isDarkAvatar) Color.White else Color.Black
+                            textColorOverAvatar = if (isDarkAvatar) Color.White else Color.Black,
+                            user = user
                         )
                     }
                 }
             }
         }
+    }
+
+    private suspend fun getUserInfo() {
+        val args: UserDetailFragmentArgs by navArgs()
+        val userName = args.userName
+        viewModel.getUser(userName)
     }
 
 }

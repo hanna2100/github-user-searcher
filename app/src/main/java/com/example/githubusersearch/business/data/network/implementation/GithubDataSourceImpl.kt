@@ -37,7 +37,7 @@ constructor(
         }
     }
 
-    suspend fun getUser(userName: String): Response<User> {
+    override suspend fun getUser(userName: String): Response<User> {
         val response = githubRetrofitService.getUser(userName)
         return if(response.isSuccessful) {
             val userDetailInfoDto = response.body()!!
@@ -46,5 +46,4 @@ constructor(
             Response.error(response.code(), response.errorBody()!!)
         }
     }
-
 }

@@ -75,7 +75,7 @@ val NanumSquareTypography = Typography(
     body2 =  TextStyle(
         fontFamily = NanumSquareFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
+        fontSize = 13.sp,
         letterSpacing = 0.25.sp
     ),
     button =  TextStyle(
