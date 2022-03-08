@@ -17,5 +17,7 @@ class UserDetailInteractors(
         return githubDataSource.getRepositories(userName)
     }
 
-
+    suspend fun getRepository(userName: String, repo: String): Response<Repository> {
+        return githubDataSource.getRepository(userName, repo)
+    }
 }

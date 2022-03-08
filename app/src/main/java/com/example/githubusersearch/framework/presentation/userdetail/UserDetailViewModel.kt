@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.toBitmap
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.findNavController
@@ -18,6 +19,7 @@ import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.business.interactors.userdetail.UserDetailInteractors
 import com.example.githubusersearch.common.extensions.subscribe
 import dagger.hilt.android.lifecycle.HiltViewModel
+import okhttp3.internal.notify
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,11 +30,15 @@ constructor(
 ) : ViewModel() {
 
     var isDarkImage = mutableStateOf(false)
+
     var user = mutableStateOf(User.getEmptyUser())
     var isLoadingUser = mutableStateOf(false)
-//    var repositories = mutableStateListOf<Repository>()
+
     var repositories = mutableStateOf<List<Repository>>(listOf())
     var isLoadingRepositories = mutableStateOf(false)
+
+    val repositoryDetail = mutableStateOf(Repository.getEmptyRepository())
+    var isLoadingRepositoryDetail = mutableStateOf(false)
 
     fun moveToSearchUserFragment(view: View?) {
         val action = UserDetailFragmentDirections
@@ -96,4 +102,27 @@ constructor(
             }
         )
     }
+
+    fun setLoadingRepositoryDetailTrue() {
+        isLoadingRepositoryDetail.value = true
+    }
+
+    suspend fun getRepository(userName: String, repo: String) {
+        userDetailInteractors.getRepository(userName, repo).subscribe(
+            onSuccess = {
+                repositoryDetail.value = it
+                isLoadingRepositoryDetail.value = false
+                println("getRepository onSuccess $it")
+            },
+            onError = {
+                isLoadingRepositoryDetail.value = false
+                println("getRepository onError $it")
+            },
+            onFailure = {
+                isLoadingRepositoryDetail.value = false
+                println("getRepository onFailure $it")
+            }
+        )
+    }
+
 }

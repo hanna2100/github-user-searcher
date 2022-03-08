@@ -2,12 +2,14 @@ package com.example.githubusersearch.framework.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.darkColors
 import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val MyPalette = darkColors(
@@ -37,16 +39,22 @@ fun GithubUserSearchTheme(
         content = content
     )
 
-    val systemUiController = rememberSystemUiController()
-    SideEffect {
-        systemUiController.setStatusBarColor(
-            color = PatrickBlue,
-            darkIcons = false
-        )
-        systemUiController.setNavigationBarColor(
-            color = White,
-            darkIcons = darkSystemBar
-        )
+    /*
+        systemUiController 사용시 preview 렌더링 오류가 있어 추가함
+        java.lang.IllegalArgumentException: The Compose View must be hosted in an Activity with a Window!
+    */
+    if (!LocalInspectionMode.current) {
+        val systemUiController = rememberSystemUiController()
+        SideEffect {
+            systemUiController.setStatusBarColor(
+                color = PatrickBlue,
+                darkIcons = false
+            )
+            systemUiController.setNavigationBarColor(
+                color = White,
+                darkIcons = darkSystemBar
+            )
+        }
     }
 }
 

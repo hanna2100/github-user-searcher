@@ -13,23 +13,23 @@ data class User(
             return User(DefaultInfo("", 0, ""))
         }
     }
+
+    @Parcelize
+    data class DefaultInfo(
+        val login: String,
+        val id: Int,
+        val avatarUrl: String,
+    ): Parcelable
+
+    @Parcelize
+    data class DetailInfo(
+        val bio: String,
+        val blog: String,
+        val createAt: String,
+        val followers: Int,
+        val following: Int,
+        val name: String,
+        val location: String,
+        val email: String
+    ): Parcelable
 }
-
-@Parcelize
-data class DefaultInfo(
-    val login: String,
-    val id: Int,
-    val avatarUrl: String,
-): Parcelable
-
-@Parcelize
-data class DetailInfo(
-    val bio: String,
-    val blog: String,
-    val createAt: String,
-    val followers: Int,
-    val following: Int,
-    val name: String,
-    val location: String,
-    val email: String
-): Parcelable

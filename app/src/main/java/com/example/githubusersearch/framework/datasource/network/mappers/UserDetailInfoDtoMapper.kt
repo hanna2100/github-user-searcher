@@ -1,7 +1,5 @@
 package com.example.githubusersearch.framework.datasource.network.mappers
 
-import com.example.githubusersearch.business.domain.model.DefaultInfo
-import com.example.githubusersearch.business.domain.model.DetailInfo
 import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.business.util.EntityMapper
 import com.example.githubusersearch.framework.datasource.network.model.UserDetailInfoDto
@@ -9,19 +7,19 @@ import com.example.githubusersearch.framework.datasource.network.model.UserDetai
 class UserDetailInfoDtoMapper: EntityMapper<UserDetailInfoDto, User> {
     override fun mapFromEntity(entity: UserDetailInfoDto): User {
         return User(
-            defaultInfo = DefaultInfo(
+            defaultInfo = User.DefaultInfo(
                 login = entity.login,
                 avatarUrl = entity.avatarUrl,
                 id = entity.id
             ),
-            detailInfo = DetailInfo(
+            detailInfo = User.DetailInfo(
                 followers = entity.followers,
                 following = entity.following,
-                name = entity.name?: "N/A",
-                location = entity.location?: "N/A",
-                email = entity.email?: "N/A",
-                bio = entity.bio?: "N/A",
-                blog = entity.blog?: "N/A",
+                name = entity.name ?: "N/A",
+                location = entity.location ?: "N/A",
+                email = entity.email ?: "N/A",
+                bio = entity.bio ?: "N/A",
+                blog = entity.blog ?: "N/A",
                 createAt = entity.createAt
             )
         )

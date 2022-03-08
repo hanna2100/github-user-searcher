@@ -2,18 +2,22 @@ package com.example.githubusersearch.di
 
 import com.example.githubusersearch.common.constant.GITHUB_ACCESS_TOKEN
 import com.example.githubusersearch.common.constant.GITHUB_API_BASIC_URL
+import com.example.githubusersearch.common.util.AuthenticatedHeaderInterceptor
 import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
+import com.example.githubusersearch.framework.datasource.network.mappers.RepositoryDetailMapper
 import com.example.githubusersearch.framework.datasource.network.mappers.RepositoryMapper
 import com.example.githubusersearch.framework.datasource.network.mappers.UserDefaultInfoDtoMapper
 import com.example.githubusersearch.framework.datasource.network.mappers.UserDetailInfoDtoMapper
-import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -21,7 +25,54 @@ import javax.inject.Singleton
 object NetworkModule {
 
     @Provides
-    fun provideBaseUrl() = GITHUB_API_BASIC_URL
+    fun providesLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAuthenticatedHeaderInterceptor(): AuthenticatedHeaderInterceptor {
+        return AuthenticatedHeaderInterceptor(GITHUB_ACCESS_TOKEN)
+    }
+
+    @Provides
+    fun provideOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        provideAuthenticatedHeaderInterceptor: AuthenticatedHeaderInterceptor
+    ): OkHttpClient {
+        val client = OkHttpClient().newBuilder()
+        client.callTimeout(40, TimeUnit.SECONDS)
+        client.connectTimeout(40, TimeUnit.SECONDS)
+        client.readTimeout(40, TimeUnit.SECONDS)
+        client.writeTimeout(40, TimeUnit.SECONDS)
+        client.addInterceptor(loggingInterceptor)
+        client.addInterceptor(provideAuthenticatedHeaderInterceptor)
+        client.build()
+        return client.build()
+    }
+
+    @Provides
+    fun provideConverterFactory(): Converter.Factory {
+        return GsonConverterFactory.create()
+    }
+
+    @Provides
+    fun provideRetrofitClient(
+        okHttpClient: OkHttpClient,
+        converterFactory: Converter.Factory
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(GITHUB_API_BASIC_URL)
+            .client(okHttpClient)
+            .addConverterFactory(converterFactory)
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideGithubRetrofitService(retrofit: Retrofit):  GithubRetrofitService {
+        return retrofit.create(GithubRetrofitService::class.java)
+    }
 
     @Singleton
     @Provides
@@ -43,18 +94,8 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideGithubRetrofitService():  GithubRetrofitService {
-        return Retrofit.Builder()
-            .baseUrl(provideBaseUrl())
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .build()
-            .create(GithubRetrofitService::class.java)
+    fun provideRepositoryDetailMapper(): RepositoryDetailMapper {
+        return RepositoryDetailMapper()
     }
 
-    @Singleton
-    @Provides
-    @Named("accept")
-    fun provideAcceptToken(): String {
-        return GITHUB_ACCESS_TOKEN
-    }
 }

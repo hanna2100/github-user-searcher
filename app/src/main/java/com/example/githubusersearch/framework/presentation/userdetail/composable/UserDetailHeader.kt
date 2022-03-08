@@ -42,13 +42,14 @@ import com.example.githubusersearch.common.composable.LoadingShimmer
 import com.example.githubusersearch.common.composable.loadImage
 import com.example.githubusersearch.common.extensions.toSince
 import com.example.githubusersearch.framework.presentation.theme.NanumSquareFamily
+import com.google.accompanist.pager.PagerState
 
 enum class SwipingStates {
     EXPANDED,
     COLLAPSED
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
 @Composable
 fun CollapsableToolbar(
     textColorOverAvatar: Color,
@@ -56,7 +57,11 @@ fun CollapsableToolbar(
     isLoadingUser: Boolean,
     onBackButtonClick: () -> Unit,
     repositories: List<Repository>,
-    isLoadingRepositories: Boolean
+    isLoadingRepositories: Boolean,
+    onRepositoryClick: (userName: String, repo: String) -> Unit,
+    repositoryDetail: Repository,
+    isLoadingRepositoryDetail: Boolean,
+    repositoryViewPagerState: PagerState
 ) {
 
     val swipingState = rememberSwipeableState(initialValue = SwipingStates.EXPANDED)
@@ -126,10 +131,23 @@ fun CollapsableToolbar(
                     textColorOverAvatar = textColorOverAvatar,
                     onBackButtonClick = onBackButtonClick
                 ) {
-                    RepositoryListView(
-                        collapsedContentHeight,
-                        repositories,
-                        isLoadingRepositories
+                    RepositoryViewPager(
+                        pagerState = repositoryViewPagerState,
+                        firstPage = {
+                            RepositoryListView(
+                                collapsedContentHeight,
+                                repositories,
+                                isLoadingRepositories,
+                                onRepositoryClick,
+                            )
+                        },
+                        secondPage = {
+                            RepositoryDetailView(
+                                collapsedContentHeight = collapsedContentHeight,
+                                repository = repositoryDetail,
+                                isLoadingRepositoryDetail = isLoadingRepositoryDetail,
+                            )
+                        }
                     )
                 }
             }

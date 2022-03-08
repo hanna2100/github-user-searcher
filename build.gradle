@@ -14,11 +14,12 @@ buildscript {
         room_compiler_version = '2.4.1'
         compose_constraintlayout_version = '1.0.0-rc01'
         material_color_version = '0.0.7'
-        accompanist_verison = '0.24.1-alpha'
+        accompanist_verison = '0.24.3-alpha'
         retrofit_version = '2.9.0'
         glide_version = '4.13.1'
         coil_version = '2.0.0-rc01'
         palette_version = '1.0.0'
+        okhttp3_version = '4.9.3'
     }
 
     dependencies {

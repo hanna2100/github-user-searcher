@@ -27,6 +27,26 @@ fun String.toSince(): String {
     }
 }
 
+@SuppressLint("SimpleDateFormat")
+fun String.toSimpleFormat(): String {
+    try {
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        sdf.timeZone = TimeZone.getTimeZone("UTC")
+        val date = sdf.parse(this)
+
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+
+        val year = calendar.get(Calendar.YEAR)
+        val mon = calendar.get(Calendar.MONTH) + 1
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        return "$year/$mon/$day"
+    } catch (e: ParseException) {
+        return this
+    }
+}
+
 fun String?.toDevLanguage(): DevLanguage {
     return when (this) {
         "C" -> DevLanguage(R.drawable.ic_c, this)

@@ -1,5 +1,6 @@
 package com.example.githubusersearch.framework.datasource.network.abstraction
 
+import com.example.githubusersearch.framework.datasource.network.model.RepositoryDetailDto
 import com.example.githubusersearch.framework.datasource.network.model.RepositoryDto
 import com.example.githubusersearch.framework.datasource.network.model.UserDetailInfoDto
 import com.example.githubusersearch.framework.datasource.network.responose.UsersSearchResponse
@@ -24,4 +25,10 @@ interface GithubRetrofitService {
 
     @GET("users/{username}/repos")
     suspend fun getRepositories(@Path("username") userName: String): Response<List<RepositoryDto>>
+
+    @GET("repos/{owner}/{repo}")
+    suspend fun getRepository(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Response<RepositoryDetailDto>
 }

@@ -2,6 +2,7 @@ package com.example.githubusersearch.business.data.network.abstraction
 
 import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.business.domain.model.User
+import com.example.githubusersearch.framework.datasource.network.model.RepositoryDetailDto
 import retrofit2.Response
 
 interface GithubDataSource {
@@ -17,4 +18,6 @@ interface GithubDataSource {
     suspend fun getUser(userName: String): Response<User>
 
     suspend fun getRepositories(userName: String): Response<List<Repository>>
+
+    suspend fun getRepository(userName: String, repo: String): Response<Repository>
 }
