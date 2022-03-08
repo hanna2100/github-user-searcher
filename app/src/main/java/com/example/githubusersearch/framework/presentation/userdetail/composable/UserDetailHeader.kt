@@ -23,6 +23,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -37,6 +38,7 @@ import androidx.constraintlayout.compose.MotionLayout
 import com.example.githubusersearch.R
 import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.business.domain.model.User
+import com.example.githubusersearch.common.composable.LoadingShimmer
 import com.example.githubusersearch.common.composable.loadImage
 import com.example.githubusersearch.common.extensions.toSince
 import com.example.githubusersearch.framework.presentation.theme.NanumSquareFamily
@@ -51,8 +53,10 @@ enum class SwipingStates {
 fun CollapsableToolbar(
     textColorOverAvatar: Color,
     user: User,
+    isLoadingUser: Boolean,
     onBackButtonClick: () -> Unit,
-    repositories: List<Repository>
+    repositories: List<Repository>,
+    isLoadingRepositories: Boolean
 ) {
 
     val swipingState = rememberSwipeableState(initialValue = SwipingStates.EXPANDED)
@@ -112,6 +116,7 @@ fun CollapsableToolbar(
             Column {
                 MotionComposeHeader(
                     user = user,
+                    isLoadingUser = isLoadingUser,
                     progress = if (swipingState.progress.to == SwipingStates.COLLAPSED) {
                         swipingState.progress.fraction
                     } else {
@@ -121,7 +126,11 @@ fun CollapsableToolbar(
                     textColorOverAvatar = textColorOverAvatar,
                     onBackButtonClick = onBackButtonClick
                 ) {
-                    RepositoryListView(collapsedContentHeight, repositories)
+                    RepositoryListView(
+                        collapsedContentHeight,
+                        repositories,
+                        isLoadingRepositories
+                    )
                 }
             }
 
@@ -132,6 +141,7 @@ fun CollapsableToolbar(
 @Composable
 fun MotionComposeHeader(
     user: User,
+    isLoadingUser: Boolean,
     progress: Float,
     collapsedContentHeight: Dp,
     textColorOverAvatar: Color,
@@ -169,7 +179,13 @@ fun MotionComposeHeader(
                 .wrapContentHeight()
                 .padding(10.dp)
                 .clip(RoundedCornerShape(10.dp))
-                .background(MaterialTheme.colors.primary.copy(red = 0.2f, green = 0.21f, blue = 0.23f))
+                .background(
+                    MaterialTheme.colors.primary.copy(
+                        red = 0.2f,
+                        green = 0.21f,
+                        blue = 0.23f
+                    )
+                )
             ,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -230,41 +246,77 @@ fun MotionComposeHeader(
         start = startConstraintSet(),
         end = endConstraintSet(collapsedContentHeight),
         progress = progress,
-        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colors.background)
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.background)
     ) {
-        Column(
-            modifier = Modifier
-                .layoutId("userDetailBox")
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .background(MaterialTheme.colors.primary)
-                .alpha(1f - progress)
-        ) {
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp * (1 - progress) + (collapsedContentHeight * progress)))
+        if (isLoadingUser) {
+            Column(
+                modifier = Modifier
+                    .layoutId("userDetailBox")
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .background(MaterialTheme.colors.primary)
+                    .alpha(1f - progress)
+            ) {
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp * (1 - progress) + (collapsedContentHeight * progress)))
 
-            BioText(user.detailInfo?.bio?: "")
-            IconText(R.drawable.ic_link, user.detailInfo?.blog?: "")
-            IconText(R.drawable.ic_location_city, user.detailInfo?.location?: "")
-            IconText(R.drawable.ic_celebration, user.detailInfo?.createAt?.toSince()?: "")
-            IconFollowerFollowingText(
-                user.detailInfo?.followers?: 0,
-                user.detailInfo?.following?: 0
-            )
+                val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
+                LoadingShimmer(
+                    width = screenWidth,
+                    height = 100.dp,
+                    padding = 10.dp,
+                    modifier = Modifier.alpha(.5f)
+                )
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .layoutId("userDetailBox")
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .background(MaterialTheme.colors.primary)
+                    .alpha(1f - progress)
+            ) {
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp * (1 - progress) + (collapsedContentHeight * progress)))
+
+                BioText(user.detailInfo?.bio?: "")
+                IconText(R.drawable.ic_link, user.detailInfo?.blog?: "")
+                IconText(R.drawable.ic_location_city, user.detailInfo?.location?: "")
+                IconText(R.drawable.ic_celebration, user.detailInfo?.createAt?.toSince()?: "")
+                IconFollowerFollowingText(
+                    user.detailInfo?.followers?: 0,
+                    user.detailInfo?.following?: 0
+                )
+            }
         }
 
-        loadImage(
-            imageUrl = user.defaultInfo.avatarUrl,
-            contentDescription = "프로필 이미지",
-            placeholderResource = R.drawable.profile_img,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .layoutId("userAvatar")
-                .fillMaxWidth()
-                .height(200.dp)
-                .clip(RoundedCornerShape((progress * 6).dp))
-        )
+        if (isLoadingUser) {
+            val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
+            LoadingShimmer(
+                width = screenWidth,
+                height = 200.dp,
+                modifier = Modifier
+                    .layoutId("userAvatar")
+                    .clip(RoundedCornerShape((progress * 6).dp))
+            )
+        } else {
+            loadImage(
+                imageUrl = user.defaultInfo.avatarUrl,
+                contentDescription = "프로필 이미지",
+                placeholderResource = R.drawable.profile_img,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .layoutId("userAvatar")
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .clip(RoundedCornerShape((progress * 6).dp))
+            )
+        }
 
         val useLoginTextSize = ((2f - progress) * 10 + 10).sp
         val animatedTextColor = animateColorAsState(
@@ -286,6 +338,7 @@ fun MotionComposeHeader(
                 color = animatedTextColor.value
             )
         )
+
         Text(
             text = user.detailInfo?.name?: "",
             modifier = Modifier

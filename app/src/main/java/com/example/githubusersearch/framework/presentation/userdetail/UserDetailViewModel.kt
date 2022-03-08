@@ -29,8 +29,10 @@ constructor(
 
     var isDarkImage = mutableStateOf(false)
     var user = mutableStateOf(User.getEmptyUser())
+    var isLoadingUser = mutableStateOf(false)
 //    var repositories = mutableStateListOf<Repository>()
     var repositories = mutableStateOf<List<Repository>>(listOf())
+    var isLoadingRepositories = mutableStateOf(false)
 
     fun moveToSearchUserFragment(view: View?) {
         val action = UserDetailFragmentDirections
@@ -59,30 +61,37 @@ constructor(
     }
 
     suspend fun getUser(userName: String) {
+        isLoadingUser.value = true
         userDetailInteractors.getUser(userName).subscribe(
             onSuccess = {
                 user.value = it
+                isLoadingUser.value = false
             },
             onError = {
-
+                isLoadingUser.value = false
             },
             onFailure = {
-
+                isLoadingUser.value = false
             }
         )
     }
 
     suspend fun getRepositories(userName: String) {
+        isLoadingRepositories.value = true
+
         userDetailInteractors.getRepositories(userName).subscribe(
             onSuccess = {
 //                repositories.addAll(it)
                 repositories.value = it
+                isLoadingRepositories.value = false
             },
             onError = {
                 println("getRepositories onError $it")
+                isLoadingRepositories.value = false
             },
             onFailure = {
                 println("getRepositories onFailure $it")
+                isLoadingRepositories.value = false
             }
         )
     }

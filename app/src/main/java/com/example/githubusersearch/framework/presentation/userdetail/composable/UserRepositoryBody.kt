@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,12 +25,14 @@ import com.example.githubusersearch.common.composable.loadImage
 import com.example.githubusersearch.common.extensions.toDevLanguage
 import com.example.githubusersearch.common.extensions.topRectBorder
 import com.example.githubusersearch.framework.presentation.theme.GithubUserSearchTheme
+import com.siddroid.holi.colors.MaterialColor
 
 
 @Composable
 internal fun RepositoryListView (
     collapsedContentHeight: Dp,
-    repositories: List<Repository>
+    repositories: List<Repository>,
+    isLoadingRepositories: Boolean
 ) {
     LazyColumn(
         Modifier.padding(
@@ -44,6 +43,19 @@ internal fun RepositoryListView (
             RepositoryCard(index, repository)
         }
     }
+    if (isLoadingRepositories) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(top = 50.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(35.dp),
+                color = MaterialColor.GREY_200,
+                strokeWidth = 4.dp
+            )
+        }
+    }
+
 }
 
 @Composable
@@ -175,7 +187,7 @@ fun test() {
             stargazersCount = 1
         )
     )
-    RepositoryListView(100.dp, list)
+    RepositoryListView(100.dp, list, true)
 
 }
 

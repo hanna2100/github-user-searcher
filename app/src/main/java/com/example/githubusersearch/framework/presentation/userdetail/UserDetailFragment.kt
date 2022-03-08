@@ -50,6 +50,8 @@ class UserDetailFragment: Fragment() {
                     val isDarkAvatar = viewModel.isDarkImage.value
                     val user = viewModel.user.value
                     val repositories = viewModel.repositories.value
+                    val isLoadingRepositories = viewModel.isLoadingRepositories.value
+                    val isLoadingUser = viewModel.isLoadingUser.value
 
                     Column(modifier = Modifier
                         .fillMaxSize()
@@ -61,7 +63,9 @@ class UserDetailFragment: Fragment() {
                             },
                             textColorOverAvatar = if (isDarkAvatar) Color.White else Color.Black,
                             user = user,
-                            repositories = repositories?: emptyList()
+                            isLoadingUser = isLoadingUser,
+                            repositories = repositories,
+                            isLoadingRepositories = isLoadingRepositories
                         )
                     }
                 }
