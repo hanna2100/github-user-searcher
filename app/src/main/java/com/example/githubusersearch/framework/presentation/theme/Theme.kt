@@ -37,27 +37,27 @@ fun GithubUserSearchTheme(
         content = content
     )
 
-//    val systemUiController = rememberSystemUiController()
-//    SideEffect {
-//        systemUiController.setStatusBarColor(
-//            color = PatrickBlue,
-//            darkIcons = false
-//        )
-//        systemUiController.setNavigationBarColor(
-//            color = White,
-//            darkIcons = darkSystemBar
-//        )
-//    }
+    val systemUiController = rememberSystemUiController()
+    SideEffect {
+        systemUiController.setStatusBarColor(
+            color = PatrickBlue,
+            darkIcons = false
+        )
+        systemUiController.setNavigationBarColor(
+            color = White,
+            darkIcons = darkSystemBar
+        )
+    }
 }
 
-object DarkRippleTheme: RippleTheme {
+object LightRippleTheme: RippleTheme {
 
     @Composable
-    override fun defaultColor(): Color = MaterialTheme.colors.primary
+    override fun defaultColor(): Color = Color.White
 
     @Composable
     override fun rippleAlpha(): RippleAlpha = RippleTheme.defaultRippleAlpha(
-        Color.Black,
+        Color.White,
         lightTheme = !isSystemInDarkTheme()
     )
 }

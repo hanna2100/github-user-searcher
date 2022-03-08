@@ -66,6 +66,7 @@ constructor(
             onSuccess = {
                 user.value = it
                 isLoadingUser.value = false
+                println("getUser onSuccess $it")
             },
             onError = {
                 isLoadingUser.value = false
@@ -81,9 +82,9 @@ constructor(
 
         userDetailInteractors.getRepositories(userName).subscribe(
             onSuccess = {
-//                repositories.addAll(it)
                 repositories.value = it
                 isLoadingRepositories.value = false
+                println("getRepositories onSuccess ${it.size}")
             },
             onError = {
                 println("getRepositories onError $it")

@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -21,11 +20,10 @@ import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -37,7 +35,9 @@ import coil.request.ImageRequest
 import com.example.githubusersearch.R
 import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.common.extensions.OnBottomReached
-import com.example.githubusersearch.framework.presentation.theme.DarkRippleTheme
+import com.example.githubusersearch.common.extensions.topRectBorder
+import com.example.githubusersearch.framework.presentation.theme.LightRippleTheme
+import com.siddroid.holi.colors.MaterialColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -48,13 +48,18 @@ fun UserListView(
     onBottomReached: ()->Unit
 ) {
     val listState = rememberLazyListState()
-    CompositionLocalProvider(LocalRippleTheme provides DarkRippleTheme) {
-        Box(modifier = Modifier.fillMaxWidth()) {
+    CompositionLocalProvider(LocalRippleTheme provides LightRippleTheme) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.background)
+        ) {
             LazyColumn(
                 state = listState,
             ) {
                 itemsIndexed(items = users) { index, item ->
                     UserCard(
+                        index = index,
                         imageUrl = item.defaultInfo.avatarUrl,
                         login = item.defaultInfo.login,
                         onUserClick = onUserClick,
@@ -106,6 +111,7 @@ fun UserListView(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UserCard(
+    index: Int,
     imageUrl: String,
     login: String,
     onUserClick: (String) -> Unit
@@ -117,11 +123,20 @@ fun UserCard(
             animationSpec = tween(300, easing = FastOutSlowInEasing)
         )
     }
-    Card(
-        modifier = Modifier
+    val cardModifier = if (index == 0) {
+        Modifier
             .fillMaxWidth()
             .heightIn(min = 100.dp)
-            .graphicsLayer(translationX = animatedProgress.value),
+            .graphicsLayer(translationX = animatedProgress.value)
+    } else {
+        Modifier
+            .fillMaxWidth()
+            .heightIn(min = 100.dp)
+            .graphicsLayer(translationX = animatedProgress.value)
+            .topRectBorder(brush = SolidColor(MaterialColor.GREY_600))
+    }
+    Card(
+        modifier = cardModifier,
         backgroundColor = MaterialTheme.colors.background,
         onClick = {
             onUserClick(login)
@@ -142,7 +157,7 @@ fun UserCard(
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .size(60.dp)
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(5.dp))
             )
             Text(
                 text = login,

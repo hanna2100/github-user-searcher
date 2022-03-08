@@ -1,6 +1,7 @@
 package com.example.githubusersearch.framework.presentation.userdetail.composable
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
@@ -34,25 +36,29 @@ internal fun RepositoryListView (
     repositories: List<Repository>,
     isLoadingRepositories: Boolean
 ) {
-    LazyColumn(
-        Modifier.padding(
-            bottom = collapsedContentHeight
-        )
+    Column(
+        modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)
     ) {
-        itemsIndexed(repositories){ index, repository ->
-            RepositoryCard(index, repository)
-        }
-    }
-    if (isLoadingRepositories) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(top = 50.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(35.dp),
-                color = MaterialColor.GREY_200,
-                strokeWidth = 4.dp
+        LazyColumn(
+            Modifier.padding(
+                bottom = collapsedContentHeight
             )
+        ) {
+            itemsIndexed(repositories){ index, repository ->
+                RepositoryCard(index, repository)
+            }
+        }
+        if (isLoadingRepositories) {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(top = 50.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(35.dp),
+                    color = MaterialColor.GREY_200,
+                    strokeWidth = 4.dp
+                )
+            }
         }
     }
 

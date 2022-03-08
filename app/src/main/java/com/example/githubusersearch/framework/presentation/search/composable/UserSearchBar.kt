@@ -53,17 +53,7 @@ fun UserSearchBar(
         .background(MaterialTheme.colors.background)
         .fillMaxWidth()
         .wrapContentHeight()
-        .background(
-            brush = Brush.linearGradient(
-                colors = listOf(
-                    MaterialTheme.colors.primary,
-                    MaterialTheme.colors.primary,
-                    MaterialTheme.colors.primaryVariant
-                ),
-                end = Offset(0f, Float.POSITIVE_INFINITY),
-                start = Offset(Float.POSITIVE_INFINITY, 0f)
-            ),
-        )
+        .background(MaterialTheme.colors.primary)
         .padding(30.dp)
         .animateContentSize()
     ) {
