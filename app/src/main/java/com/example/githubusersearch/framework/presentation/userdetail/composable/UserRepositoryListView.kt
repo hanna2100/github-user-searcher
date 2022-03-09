@@ -35,7 +35,7 @@ internal fun RepositoryListView (
     collapsedContentHeight: Dp,
     repositories: List<Repository>,
     isLoadingRepositories: Boolean,
-    onRepositoryClick: (userName: String, repo: String) -> Unit,
+    onRepositoryClick: (owner: String, repo: String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -63,7 +63,7 @@ internal fun RepositoryListView (
 private fun RepositoryCard(
     index: Int,
     repository: Repository,
-    onRepositoryClick: (userName: String, repo: String) -> Unit,
+    onRepositoryClick: (owner: String, repo: String) -> Unit,
 ) {
     GithubUserSearchTheme {
         val cardModifier = if(index == 0) {

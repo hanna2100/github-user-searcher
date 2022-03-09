@@ -4,10 +4,7 @@ import com.example.githubusersearch.common.constant.GITHUB_ACCESS_TOKEN
 import com.example.githubusersearch.common.constant.GITHUB_API_BASIC_URL
 import com.example.githubusersearch.common.util.AuthenticatedHeaderInterceptor
 import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
-import com.example.githubusersearch.framework.datasource.network.mappers.RepositoryDetailMapper
-import com.example.githubusersearch.framework.datasource.network.mappers.RepositoryMapper
-import com.example.githubusersearch.framework.datasource.network.mappers.UserDefaultInfoDtoMapper
-import com.example.githubusersearch.framework.datasource.network.mappers.UserDetailInfoDtoMapper
+import com.example.githubusersearch.framework.datasource.network.mappers.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -97,5 +94,12 @@ object NetworkModule {
     fun provideRepositoryDetailMapper(): RepositoryDetailMapper {
         return RepositoryDetailMapper()
     }
+
+    @Singleton
+    @Provides
+    fun provideContributorsDtoMapper(): ContributorsDtoMapper {
+        return ContributorsDtoMapper()
+    }
+
 
 }

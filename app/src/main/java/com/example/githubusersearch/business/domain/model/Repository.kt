@@ -29,6 +29,12 @@ data class Repository(
                 stargazersCount = 0,
             )
         }
+
+        fun Repository.setContributors(c: List<Contributor>): Repository {
+            return this.copy(
+                contributors = c
+            )
+        }
     }
 
     data class DetailInfo(
@@ -46,7 +52,8 @@ data class Repository(
 
     data class Contributor(
         val login: String,
-        val avatarUrl: String
+        val avatarUrl: String,
+        val contributions: Int,
     )
 }
 

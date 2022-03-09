@@ -4,10 +4,8 @@ import com.example.githubusersearch.business.data.network.abstraction.GithubData
 import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
-import com.example.githubusersearch.framework.datasource.network.mappers.RepositoryDetailMapper
-import com.example.githubusersearch.framework.datasource.network.mappers.RepositoryMapper
-import com.example.githubusersearch.framework.datasource.network.mappers.UserDefaultInfoDtoMapper
-import com.example.githubusersearch.framework.datasource.network.mappers.UserDetailInfoDtoMapper
+import com.example.githubusersearch.framework.datasource.network.mappers.*
+import com.example.githubusersearch.framework.datasource.network.model.ContributorsDto
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,6 +19,7 @@ constructor(
     private val mapperDetailInfo: UserDetailInfoDtoMapper,
     private val mapperRepository: RepositoryMapper,
     private val mapperRepositoryDetailMapper: RepositoryDetailMapper,
+    private val contributorsDtoMapper: ContributorsDtoMapper
 ): GithubDataSource{
 
     override suspend fun searchUsers(
@@ -62,11 +61,22 @@ constructor(
         }
     }
 
-    override suspend fun getRepository(userName: String, repo: String): Response<Repository> {
-        val response = githubRetrofitService.getRepository(userName, repo)
+    override suspend fun getRepository(owner: String, repo: String): Response<Repository> {
+        val response = githubRetrofitService.getRepository(owner, repo)
         return if (response.isSuccessful) {
             val repositoryDetailDto = response.body()!!
             Response.success(mapperRepositoryDetailMapper.mapFromEntity(repositoryDetailDto))
+        } else {
+            Response.error(response.code(), response.errorBody()!!)
+        }
+    }
+
+    override suspend fun getContributors(owner: String, repo: String): Response<List<Repository.Contributor>> {
+        val response = githubRetrofitService.getContributors(owner, repo)
+        return if (response.isSuccessful) {
+            val contributorsDtoList = response.body()!!
+            val contributorsDomainList = contributorsDtoList.map { contributorsDtoMapper.mapFromEntity(it) }
+            Response.success(contributorsDomainList)
         } else {
             Response.error(response.code(), response.errorBody()!!)
         }

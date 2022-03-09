@@ -15,11 +15,13 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.example.githubusersearch.business.domain.model.Repository
+import com.example.githubusersearch.business.domain.model.Repository.Companion.setContributors
 import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.business.interactors.userdetail.UserDetailInteractors
 import com.example.githubusersearch.common.extensions.subscribe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.internal.notify
+import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -107,8 +109,8 @@ constructor(
         isLoadingRepositoryDetail.value = true
     }
 
-    suspend fun getRepository(userName: String, repo: String) {
-        userDetailInteractors.getRepository(userName, repo).subscribe(
+    suspend fun getRepository(owner: String, repo: String) {
+        userDetailInteractors.getRepository(owner, repo).subscribe(
             onSuccess = {
                 repositoryDetail.value = it
                 isLoadingRepositoryDetail.value = false
@@ -121,6 +123,20 @@ constructor(
             onFailure = {
                 isLoadingRepositoryDetail.value = false
                 println("getRepository onFailure $it")
+            }
+        )
+    }
+
+    suspend fun getContributors(owner: String, repo: String) {
+        userDetailInteractors.getContributors(owner, repo).subscribe(
+            onSuccess = {
+                repositoryDetail.value = repositoryDetail.value.setContributors(it)
+            },
+            onError = {
+
+            },
+            onFailure = {
+
             }
         )
     }

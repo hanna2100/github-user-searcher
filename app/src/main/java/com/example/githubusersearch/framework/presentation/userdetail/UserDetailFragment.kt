@@ -77,11 +77,12 @@ class UserDetailFragment: Fragment() {
                             isLoadingUser = isLoadingUser,
                             repositories = repositories,
                             isLoadingRepositories = isLoadingRepositories,
-                            onRepositoryClick = { userName, repo ->
+                            onRepositoryClick = { owner, repo ->
                                 scope.launch {
                                     viewModel.setLoadingRepositoryDetailTrue()
                                     pagerState.animateScrollToPage(1)
-                                    viewModel.getRepository(userName, repo)
+                                    viewModel.getRepository(owner, repo)
+                                    viewModel.getContributors(owner, repo)
                                 }
                             },
                             repositoryDetail = repositoryDetail,

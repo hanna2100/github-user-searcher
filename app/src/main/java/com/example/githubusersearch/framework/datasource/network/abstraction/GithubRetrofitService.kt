@@ -1,5 +1,6 @@
 package com.example.githubusersearch.framework.datasource.network.abstraction
 
+import com.example.githubusersearch.framework.datasource.network.model.ContributorsDto
 import com.example.githubusersearch.framework.datasource.network.model.RepositoryDetailDto
 import com.example.githubusersearch.framework.datasource.network.model.RepositoryDto
 import com.example.githubusersearch.framework.datasource.network.model.UserDetailInfoDto
@@ -31,4 +32,11 @@ interface GithubRetrofitService {
         @Path("owner") owner: String,
         @Path("repo") repo: String
     ): Response<RepositoryDetailDto>
+
+    @GET("repos/{owner}/{repo}/contributors")
+    suspend fun getContributors(
+        @Path("owner") owner: String,
+        @Path("repo")repo: String
+    ): Response<List<ContributorsDto>>
+
 }

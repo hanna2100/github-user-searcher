@@ -58,7 +58,7 @@ fun CollapsableToolbar(
     onBackButtonClick: () -> Unit,
     repositories: List<Repository>,
     isLoadingRepositories: Boolean,
-    onRepositoryClick: (userName: String, repo: String) -> Unit,
+    onRepositoryClick: (owner: String, repo: String) -> Unit,
     repositoryDetail: Repository,
     isLoadingRepositoryDetail: Boolean,
     repositoryViewPagerState: PagerState

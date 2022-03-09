@@ -19,5 +19,7 @@ interface GithubDataSource {
 
     suspend fun getRepositories(userName: String): Response<List<Repository>>
 
-    suspend fun getRepository(userName: String, repo: String): Response<Repository>
+    suspend fun getRepository(owner: String, repo: String): Response<Repository>
+
+    suspend fun getContributors(owner: String, repo: String): Response<List<Repository.Contributor>>
 }

@@ -288,8 +288,16 @@ fun RepositoryDetailViewPreview() {
 //        Repository.ReadMe("https://raw.githubusercontent.com/octokit/octokit.rb/master/README.md")
         readMe = "",
         contributors = listOf(
-            Repository.Contributor(login = "dfweer", avatarUrl = "https://github.com/images/error/octocat_happy.gif"),
-            Repository.Contributor(login = "dfweer", avatarUrl = "https://github.com/images/error/octocat_happy.gif")
+            Repository.Contributor(
+                login = "dfweer",
+                avatarUrl = "https://github.com/images/error/octocat_happy.gif",
+                10
+            ),
+            Repository.Contributor(
+                login = "dfweer",
+                avatarUrl = "https://github.com/images/error/octocat_happy.gif",
+                20
+            )
         )
     )
     GithubUserSearchTheme {
