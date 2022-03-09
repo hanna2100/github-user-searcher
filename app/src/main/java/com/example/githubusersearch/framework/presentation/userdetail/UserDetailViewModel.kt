@@ -2,26 +2,23 @@ package com.example.githubusersearch.framework.presentation.userdetail
 
 import android.content.Context
 import android.view.View
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.toBitmap
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.findNavController
 import androidx.palette.graphics.Palette
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
+import com.example.githubusersearch.business.domain.model.ReadMe
 import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.business.domain.model.Repository.Companion.setContributors
+import com.example.githubusersearch.business.domain.model.Repository.Companion.setMarkdownHTML
 import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.business.interactors.userdetail.UserDetailInteractors
 import com.example.githubusersearch.common.extensions.subscribe
 import dagger.hilt.android.lifecycle.HiltViewModel
-import okhttp3.internal.notify
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,6 +38,7 @@ constructor(
 
     val repositoryDetail = mutableStateOf(Repository.getEmptyRepository())
     var isLoadingRepositoryDetail = mutableStateOf(false)
+    var isReadMeMarkdownRenderReady = mutableStateOf(false)
 
     fun moveToSearchUserFragment(view: View?) {
         val action = UserDetailFragmentDirections
@@ -105,8 +103,9 @@ constructor(
         )
     }
 
-    fun setLoadingRepositoryDetailTrue() {
+    fun initLoadingValue() {
         isLoadingRepositoryDetail.value = true
+        isReadMeMarkdownRenderReady.value = false
     }
 
     suspend fun getRepository(owner: String, repo: String) {
@@ -131,6 +130,39 @@ constructor(
         userDetailInteractors.getContributors(owner, repo).subscribe(
             onSuccess = {
                 repositoryDetail.value = repositoryDetail.value.setContributors(it)
+            },
+            onError = {
+
+            },
+            onFailure = {
+
+            }
+        )
+    }
+
+
+    suspend fun getReadMe(
+        owner: String,
+        repo: String,
+    ) {
+        userDetailInteractors.getReadMe(owner, repo).subscribe(
+            onSuccess = {
+                renderMarkDown(it.content)
+            },
+            onError = {
+
+            },
+            onFailure = {
+
+            }
+        )
+    }
+
+    suspend fun renderMarkDown(content: String) {
+        userDetailInteractors.renderMarkDown(content).subscribe(
+            onSuccess = {
+                repositoryDetail.value = repositoryDetail.value.setMarkdownHTML(it)
+                isReadMeMarkdownRenderReady.value = true
             },
             onError = {
 

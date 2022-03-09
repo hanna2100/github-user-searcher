@@ -1,11 +1,14 @@
 package com.example.githubusersearch.business.data.network.implementation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.githubusersearch.business.data.network.abstraction.GithubDataSource
+import com.example.githubusersearch.business.domain.model.ReadMe
 import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
 import com.example.githubusersearch.framework.datasource.network.mappers.*
-import com.example.githubusersearch.framework.datasource.network.model.ContributorsDto
+import com.example.githubusersearch.framework.datasource.network.request.MarkDownText
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,7 +22,9 @@ constructor(
     private val mapperDetailInfo: UserDetailInfoDtoMapper,
     private val mapperRepository: RepositoryMapper,
     private val mapperRepositoryDetailMapper: RepositoryDetailMapper,
-    private val contributorsDtoMapper: ContributorsDtoMapper
+    private val contributorsDtoMapper: ContributorsDtoMapper,
+    private val readMeDtoMapper: ReadMeDtoMapper,
+    private val renderedMarkdownHTMLMapper: RenderedMarkdownHTMLMapper
 ): GithubDataSource{
 
     override suspend fun searchUsers(
@@ -74,9 +79,31 @@ constructor(
     override suspend fun getContributors(owner: String, repo: String): Response<List<Repository.Contributor>> {
         val response = githubRetrofitService.getContributors(owner, repo)
         return if (response.isSuccessful) {
-            val contributorsDtoList = response.body()!!
+            val contributorsDtoList = response.body()?: emptyList()
             val contributorsDomainList = contributorsDtoList.map { contributorsDtoMapper.mapFromEntity(it) }
             Response.success(contributorsDomainList)
+        } else {
+            Response.error(response.code(), response.errorBody()!!)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun getReadMe(owner: String, repo: String): Response<ReadMe> {
+        val response = githubRetrofitService.getReadMe(owner, repo)
+        return if (response.isSuccessful) {
+            val readMeDto = response.body()!!
+            val readMe = readMeDtoMapper.mapFromEntity(readMeDto)
+            Response.success(readMe)
+        } else {
+            Response.error(response.code(), response.errorBody()!!)
+        }
+    }
+
+    override suspend fun renderMarkDown(content: String): Response<Repository.MarkdownHTML> {
+        val response = githubRetrofitService.renderMarkDown(text = MarkDownText(content))
+        return if (response.isSuccessful) {
+            val markdownHTML = renderedMarkdownHTMLMapper.mapFromEntity(response.body()?.string()?:"")
+            Response.success(markdownHTML)
         } else {
             Response.error(response.code(), response.errorBody()!!)
         }

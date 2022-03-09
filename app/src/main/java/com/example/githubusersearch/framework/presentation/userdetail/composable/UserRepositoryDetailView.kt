@@ -1,13 +1,15 @@
 package com.example.githubusersearch.framework.presentation.userdetail.composable
 
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +25,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewFeature
 import com.example.githubusersearch.R
 import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.common.composable.CircularIndicator
@@ -29,6 +35,7 @@ import com.example.githubusersearch.common.composable.loadImage
 import com.example.githubusersearch.common.extensions.toDevLanguage
 import com.example.githubusersearch.common.extensions.toSimpleFormat
 import com.example.githubusersearch.framework.presentation.theme.GithubUserSearchTheme
+import com.google.accompanist.flowlayout.FlowColumn
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -37,6 +44,7 @@ fun RepositoryDetailView(
     collapsedContentHeight: Dp,
     repository: Repository,
     isLoadingRepositoryDetail: Boolean,
+    isReadMeMarkdownRenderReady: Boolean
 ) {
 
     @Composable
@@ -103,7 +111,9 @@ fun RepositoryDetailView(
         var isMoreOpen by remember { mutableStateOf(false) }
 
         Card (
-            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
             backgroundColor = MaterialTheme.colors.background,
             onClick = {
                 isMoreOpen = !isMoreOpen
@@ -113,7 +123,9 @@ fun RepositoryDetailView(
         ) {
             Column {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text (
@@ -175,12 +187,12 @@ fun RepositoryDetailView(
             headerText = R.string.contributors,
             tailText = repository.contributors?.size.toString(),
             moreContent = {
-                LazyColumn(
+                FlowColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colors.background)
                 ) {
-                    itemsIndexed(items = repository.contributors?: emptyList()) { _, contributor ->
+                    repository.contributors?.forEachIndexed { index, contributor ->
                         ContributorCard(contributor)
                     }
                 }
@@ -215,9 +227,32 @@ fun RepositoryDetailView(
     }
 
     @Composable
-    fun DetailViewBottom() {
-
+    fun DetailViewReadMe(repository: Repository, isReadMeMarkdownRenderReady: Boolean) {
+        val context = LocalContext.current
+        Column(modifier = Modifier
+            .fillMaxSize()
+        ) {
+            if (isReadMeMarkdownRenderReady) {
+                AndroidView(factory = {
+                    WebView(context).apply {
+                        if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+                            WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_ON)
+                        }
+                        webViewClient = WebViewClient()
+                        loadDataWithBaseURL(
+                            null,
+                            repository.readMeMarkdownHTML?.html?: "",
+                            "text/HTML",
+                            "UTF-8",
+                            null
+                        )
+                    }
+                })
+            }
+        }
     }
+
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
@@ -226,18 +261,19 @@ fun RepositoryDetailView(
             .padding(
                 bottom = collapsedContentHeight
             )
+            .verticalScroll(scrollState)
     ) {
         if (isLoadingRepositoryDetail) {
             CircularIndicator()
         } else {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(20.dp, 15.dp)
             ) {
                 DetailViewHeader(repository)
                 DetailViewBody(repository)
-                DetailViewBottom()
+                DetailViewReadMe(repository, isReadMeMarkdownRenderReady)
             }
         }
     }
@@ -286,7 +322,7 @@ fun RepositoryDetailViewPreview() {
             updatedAt = "2011-01-26T19:01:12Z"
         ),
 //        Repository.ReadMe("https://raw.githubusercontent.com/octokit/octokit.rb/master/README.md")
-        readMe = "",
+        readMeMarkdownHTML = Repository.MarkdownHTML("dafaff"),
         contributors = listOf(
             Repository.Contributor(
                 login = "dfweer",
@@ -304,7 +340,8 @@ fun RepositoryDetailViewPreview() {
         RepositoryDetailView(
             isLoadingRepositoryDetail = false,
             repository = rep,
-            collapsedContentHeight = 100.dp
+            collapsedContentHeight = 100.dp,
+            isReadMeMarkdownRenderReady = true
         )
     }
 }

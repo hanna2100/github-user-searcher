@@ -9,7 +9,6 @@ class AuthenticatedHeaderInterceptor(private val acceptToken: String): Intercept
         val request = chainRequest.newBuilder().apply {
             addHeader("Authorization", "token " + acceptToken)
         }.build()
-        println("request = " + request)
         return chain.proceed(request)
     }
 }

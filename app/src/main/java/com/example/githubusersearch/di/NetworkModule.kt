@@ -1,10 +1,13 @@
 package com.example.githubusersearch.di
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.githubusersearch.common.constant.GITHUB_ACCESS_TOKEN
 import com.example.githubusersearch.common.constant.GITHUB_API_BASIC_URL
 import com.example.githubusersearch.common.util.AuthenticatedHeaderInterceptor
 import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
 import com.example.githubusersearch.framework.datasource.network.mappers.*
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,7 +53,8 @@ object NetworkModule {
 
     @Provides
     fun provideConverterFactory(): Converter.Factory {
-        return GsonConverterFactory.create()
+        val gson = GsonBuilder().setLenient().create()
+        return GsonConverterFactory.create(gson)
     }
 
     @Provides
@@ -101,5 +105,16 @@ object NetworkModule {
         return ContributorsDtoMapper()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    @Singleton
+    @Provides
+    fun provideReadMeDtoMapper(): ReadMeDtoMapper {
+        return ReadMeDtoMapper()
+    }
 
+    @Singleton
+    @Provides
+    fun provideRenderedMarkDownHTMLMapper() :RenderedMarkdownHTMLMapper {
+        return RenderedMarkdownHTMLMapper()
+    }
 }

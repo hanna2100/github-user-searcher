@@ -1,14 +1,11 @@
 package com.example.githubusersearch.framework.datasource.network.abstraction
 
-import com.example.githubusersearch.framework.datasource.network.model.ContributorsDto
-import com.example.githubusersearch.framework.datasource.network.model.RepositoryDetailDto
-import com.example.githubusersearch.framework.datasource.network.model.RepositoryDto
-import com.example.githubusersearch.framework.datasource.network.model.UserDetailInfoDto
+import com.example.githubusersearch.framework.datasource.network.model.*
+import com.example.githubusersearch.framework.datasource.network.request.MarkDownText
 import com.example.githubusersearch.framework.datasource.network.responose.UsersSearchResponse
+import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface GithubRetrofitService {
 
@@ -39,4 +36,12 @@ interface GithubRetrofitService {
         @Path("repo")repo: String
     ): Response<List<ContributorsDto>>
 
+    @GET("repos/{owner}/{repo}/readme")
+    suspend fun getReadMe(
+        @Path("owner") owner: String,
+        @Path("repo")repo: String
+    ): Response<ReadMeDto>
+
+    @POST("markdown")
+    suspend fun renderMarkDown(@Body text: MarkDownText): Response<ResponseBody>
 }

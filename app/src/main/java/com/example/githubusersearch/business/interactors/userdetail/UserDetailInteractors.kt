@@ -1,6 +1,7 @@
 package com.example.githubusersearch.business.interactors.userdetail
 
 import com.example.githubusersearch.business.data.network.abstraction.GithubDataSource
+import com.example.githubusersearch.business.domain.model.ReadMe
 import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.business.domain.model.User
 import retrofit2.Response
@@ -24,4 +25,13 @@ class UserDetailInteractors(
     suspend fun getContributors(owner: String, repo: String): Response<List<Repository.Contributor>> {
         return githubDataSource.getContributors(owner, repo)
     }
+
+    suspend fun getReadMe(owner: String, repo: String): Response<ReadMe> {
+        return githubDataSource.getReadMe(owner, repo)
+    }
+
+    suspend fun renderMarkDown(content: String): Response<Repository.MarkdownHTML> {
+        return githubDataSource.renderMarkDown(content)
+    }
+
 }

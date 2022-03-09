@@ -33,7 +33,9 @@ object AppModule {
         mapperDetailInfo: UserDetailInfoDtoMapper,
         repositoryMapper: RepositoryMapper,
         repositoryDetailMapper: RepositoryDetailMapper,
-        contributorsDtoMapper: ContributorsDtoMapper
+        contributorsDtoMapper: ContributorsDtoMapper,
+        readMeDtoMapper: ReadMeDtoMapper,
+        renderedMarkdownHTMLMapper: RenderedMarkdownHTMLMapper
     ): GithubDataSource {
         return GithubDataSourceImpl(
             githubRetrofitService,
@@ -41,7 +43,9 @@ object AppModule {
             mapperDetailInfo,
             repositoryMapper,
             repositoryDetailMapper,
-            contributorsDtoMapper
+            contributorsDtoMapper,
+            readMeDtoMapper,
+            renderedMarkdownHTMLMapper
         )
     }
 

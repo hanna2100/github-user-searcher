@@ -61,7 +61,8 @@ fun CollapsableToolbar(
     onRepositoryClick: (owner: String, repo: String) -> Unit,
     repositoryDetail: Repository,
     isLoadingRepositoryDetail: Boolean,
-    repositoryViewPagerState: PagerState
+    repositoryViewPagerState: PagerState,
+    isReadMeMarkdownRenderReady: Boolean
 ) {
 
     val swipingState = rememberSwipeableState(initialValue = SwipingStates.EXPANDED)
@@ -146,6 +147,7 @@ fun CollapsableToolbar(
                                 collapsedContentHeight = collapsedContentHeight,
                                 repository = repositoryDetail,
                                 isLoadingRepositoryDetail = isLoadingRepositoryDetail,
+                                isReadMeMarkdownRenderReady = isReadMeMarkdownRenderReady
                             )
                         }
                     )

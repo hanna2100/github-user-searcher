@@ -1,7 +1,6 @@
 package com.example.githubusersearch.business.domain.model
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.RawRes
 import com.example.githubusersearch.common.extensions.toDevLanguage
 
 data class Repository(
@@ -13,7 +12,7 @@ data class Repository(
     val forksCount: Int,
     val stargazersCount: Int,
     val detailInfo: DetailInfo? = null,
-    val readMe: String? = null,
+    val readMeMarkdownHTML: MarkdownHTML? = null,
     val contributors: List<Contributor>? = null
 ) {
 
@@ -35,6 +34,12 @@ data class Repository(
                 contributors = c
             )
         }
+
+        fun Repository.setMarkdownHTML(mh: MarkdownHTML): Repository {
+            return this.copy(
+                readMeMarkdownHTML = mh
+            )
+        }
     }
 
     data class DetailInfo(
@@ -46,8 +51,8 @@ data class Repository(
         val updatedAt: String
     )
 
-    data class ReadMe(
-        val downloadUrl: String,
+    data class MarkdownHTML(
+        val html: String,
     )
 
     data class Contributor(
