@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -19,13 +21,16 @@ import androidx.navigation.fragment.navArgs
 import com.example.githubusersearch.framework.presentation.theme.GithubUserSearchTheme
 import com.example.githubusersearch.framework.presentation.userdetail.composable.CollapsableToolbar
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class UserDetailFragment: Fragment() {
     private val viewModel: UserDetailViewModel by viewModels()
+    private var callback: OnBackPressedCallback? = null
 
     @OptIn(ExperimentalPagerApi::class)
     override fun onCreateView(
@@ -61,6 +66,8 @@ class UserDetailFragment: Fragment() {
                     val pagerState = rememberPagerState()
                     val scope = rememberCoroutineScope()
 
+                    setOnBackPressedCallback(scope, pagerState)
+
                     Column(modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colors.background)
@@ -92,6 +99,30 @@ class UserDetailFragment: Fragment() {
                 }
             }
         }
+    }
+
+    @OptIn(ExperimentalPagerApi::class)
+    private fun setOnBackPressedCallback(scope: CoroutineScope, pagerState: PagerState) {
+        callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                scope.launch {
+                    if (pagerState.currentPage != 0) {
+                        pagerState.animateScrollToPage(0)
+                    } else {
+                        viewModel.moveToSearchUserFragment(view)
+                    }
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this.viewLifecycleOwner,
+            callback!!
+        )
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callback?.remove()
     }
 
     private fun getUserName(): String {

@@ -41,9 +41,7 @@ constructor(
     var isReadMeMarkdownRenderReady = mutableStateOf(false)
 
     fun moveToSearchUserFragment(view: View?) {
-        val action = UserDetailFragmentDirections
-            .actionUserDetailFragmentToSearchUserFragment()
-        view?.findNavController()?.navigate(action)
+        view?.findNavController()?.popBackStack()
     }
 
     suspend fun checkAvatarImgIsDark(context: Context, avatarImgUrl: String) {
