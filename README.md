@@ -21,6 +21,32 @@ GitHub에서 제공하는 API를 사용하여 유저를 검색하고 유저를 �
 4. 레파지토리 클릭 시 ViewPager가 전환되며 레파지토리 상세정보를 보여줍니다.
 5. 레파지토리 상세정보엔 마크다운으로 렌더링된 README가 포함됩니다.
 
+## Architecture
+```bash
+githubusersearch
+├── business
+│   ├── data
+│   ├── domain
+│   ├── interactors
+│   └── util
+├── framework
+│   ├── datasource
+│   └── presentation
+├── common
+└── di
+``` 
+- business: 비지니스 로직의 집합
+  - data: Data Source로 부터 데이터를 가져오는 인터페이스와 구현체가 정의됨.
+  - domain: 도메인 모델이 정의됨.
+  - interactors: 바깥 또는 안쪽으로 전달되는 데이터를 관리하는 Interactors 클래스가 정의됨.
+  - util: 비지니스 계층에서 사용되는 유틸모음.
+
+- framework: 뷰, 프레임워크의 집합
+  - datasource: 저장소를 다루는 패키지. Github API 호출시 사용되는 service, model, mapper 등이 정의됨.
+  - presentation: UI 계층을 다루는 패키지. activity, fragment, theme 등이 정의됨.
+
+- common: extension, util, constant 등 유틸성 패키지.
+- di: Hilt를 이용한 Dependency Injection 구현.
 
 ## Development Environment
 - Android Studio Bumblebee | 2021.1.1 Beta 5
