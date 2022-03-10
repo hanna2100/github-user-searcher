@@ -5,6 +5,8 @@ import com.example.githubusersearch.business.data.network.abstraction.GithubData
 import com.example.githubusersearch.business.data.network.implementation.GithubDataSourceImpl
 import com.example.githubusersearch.business.interactors.searchuser.SearchUserInteractors
 import com.example.githubusersearch.business.interactors.userdetail.UserDetailInteractors
+import com.example.githubusersearch.common.util.ResourcesProvider
+import com.example.githubusersearch.common.util.ResourcesProviderImpl
 import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
 import com.example.githubusersearch.framework.datasource.network.mappers.*
 import com.example.githubusersearch.framework.presentation.BaseApplication
@@ -65,5 +67,9 @@ object AppModule {
         return UserDetailInteractors(githubDataSource)
     }
 
-
+    @Singleton
+    @Provides
+    fun provideResourcesProvider(@ApplicationContext app: Context): ResourcesProvider {
+        return ResourcesProviderImpl(app)
+    }
 }

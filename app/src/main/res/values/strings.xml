@@ -7,4 +7,7 @@
     <string name="createdAt">Created at</string>
     <string name="updatedAt">Updated at</string>
     <string name="pushedAt">Pushed at</string>
+    <string name="no_search_result">검색 결과가 없습니다.</string>
+    <string name="confirm">확인</string>
+    <string name="user_search">검색결과</string>
 </resources>
