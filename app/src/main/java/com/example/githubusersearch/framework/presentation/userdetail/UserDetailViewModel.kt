@@ -41,7 +41,7 @@ constructor(
 
     val repositoryDetail = mutableStateOf(Repository.getEmptyRepository())
     var isLoadingRepositoryDetail = mutableStateOf(false)
-    var isReadMeMarkdownRenderReady = mutableStateOf(false)
+    var isLoadingReadMeMarkdown = mutableStateOf(false)
 
     val dialogQueue = DialogQueue()
 
@@ -108,7 +108,7 @@ constructor(
     }
 
     fun initLoadingValue() {
-        isReadMeMarkdownRenderReady.value = false
+        isLoadingReadMeMarkdown.value = false
         isLoadingRepositoryDetail.value = true
     }
 
@@ -173,16 +173,19 @@ constructor(
     }
 
     suspend fun renderMarkDown(content: String) {
+        isLoadingReadMeMarkdown.value = true
         userDetailInteractors.renderMarkDown(content).subscribe(
             onSuccess = {
                 repositoryDetail.value = repositoryDetail.value.setMarkdownHTML(it)
-                isReadMeMarkdownRenderReady.value = true
+                isLoadingReadMeMarkdown.value = false
             },
             onError = {
                 loadErrorDialog(this::renderMarkDown.name, it.message)
+                isLoadingReadMeMarkdown.value = false
             },
             onFailure = {
                 loadErrorDialog(this::renderMarkDown.name, it.message())
+                isLoadingReadMeMarkdown.value = false
             }
         )
     }

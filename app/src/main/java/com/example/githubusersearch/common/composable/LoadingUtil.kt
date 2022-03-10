@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -96,6 +97,21 @@ fun CircularIndicator() {
             modifier = Modifier.size(35.dp),
             color = MaterialColor.GREY_200,
             strokeWidth = 4.dp
+        )
+    }
+}
+
+@Composable
+fun LinearIndicator() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 50.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        LinearProgressIndicator(
+            modifier = Modifier.fillMaxWidth().height(4.dp).padding(20.dp, 0.dp),
+            color = MaterialColor.GREY_200,
         )
     }
 }

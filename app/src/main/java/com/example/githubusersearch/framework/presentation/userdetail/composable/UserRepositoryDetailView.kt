@@ -31,6 +31,7 @@ import androidx.webkit.WebViewFeature
 import com.example.githubusersearch.R
 import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.common.composable.CircularIndicator
+import com.example.githubusersearch.common.composable.LinearIndicator
 import com.example.githubusersearch.common.composable.loadImage
 import com.example.githubusersearch.common.extensions.toDevLanguage
 import com.example.githubusersearch.common.extensions.toSimpleFormat
@@ -44,7 +45,7 @@ fun RepositoryDetailView(
     collapsedContentHeight: Dp,
     repository: Repository,
     isLoadingRepositoryDetail: Boolean,
-    isReadMeMarkdownRenderReady: Boolean
+    isLoadingReadMeMarkdown: Boolean
 ) {
 
     @Composable
@@ -227,12 +228,16 @@ fun RepositoryDetailView(
     }
 
     @Composable
-    fun DetailViewReadMe(repository: Repository, isReadMeMarkdownRenderReady: Boolean) {
+    fun DetailViewReadMe(repository: Repository, isLoadingReadMeMarkdown: Boolean) {
         val context = LocalContext.current
         Column(modifier = Modifier
             .fillMaxSize()
         ) {
-            if (isReadMeMarkdownRenderReady) {
+            if (isLoadingReadMeMarkdown) {
+                LinearIndicator()
+            } else if (
+                !isLoadingReadMeMarkdown && repository.readMeMarkdownHTML?.html != null
+            ) {
                 AndroidView(factory = {
                     WebView(context).apply {
                         if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
@@ -241,7 +246,7 @@ fun RepositoryDetailView(
                         webViewClient = WebViewClient()
                         loadDataWithBaseURL(
                             null,
-                            repository.readMeMarkdownHTML?.html?: "",
+                            repository.readMeMarkdownHTML.html,
                             "text/HTML",
                             "UTF-8",
                             null
@@ -273,7 +278,7 @@ fun RepositoryDetailView(
             ) {
                 DetailViewHeader(repository)
                 DetailViewBody(repository)
-                DetailViewReadMe(repository, isReadMeMarkdownRenderReady)
+                DetailViewReadMe(repository, isLoadingReadMeMarkdown)
             }
         }
     }
@@ -341,7 +346,7 @@ fun RepositoryDetailViewPreview() {
             isLoadingRepositoryDetail = false,
             repository = rep,
             collapsedContentHeight = 100.dp,
-            isReadMeMarkdownRenderReady = true
+            isLoadingReadMeMarkdown = true
         )
     }
 }

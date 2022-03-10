@@ -61,7 +61,7 @@ class UserDetailFragment: Fragment() {
                     val isLoadingUser = viewModel.isLoadingUser.value
                     val repositoryDetail = viewModel.repositoryDetail.value
                     val isLoadingRepositoryDetail = viewModel.isLoadingRepositoryDetail.value
-                    val isReadMeMarkdownRenderReady = viewModel.isReadMeMarkdownRenderReady.value
+                    val isReadMeMarkdownRenderReady = viewModel.isLoadingReadMeMarkdown.value
 
                     val pagerState = rememberPagerState()
                     val scope = rememberCoroutineScope()
@@ -93,7 +93,7 @@ class UserDetailFragment: Fragment() {
                             repositoryDetail = repositoryDetail,
                             isLoadingRepositoryDetail = isLoadingRepositoryDetail,
                             repositoryViewPagerState = pagerState,
-                            isReadMeMarkdownRenderReady = isReadMeMarkdownRenderReady
+                            isLoadingReadMeMarkdown = isReadMeMarkdownRenderReady
                         )
                     }
                     ProcessDialogQueue(
