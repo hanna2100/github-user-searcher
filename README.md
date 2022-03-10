@@ -21,6 +21,7 @@ GitHub에서 제공하는 API를 사용하여 유저를 검색하고 유저를 �
 4. 레파지토리 클릭 시 ViewPager가 전환되며 레파지토리 상세정보를 보여줍니다.
 5. 레파지토리 상세정보엔 마크다운으로 렌더링된 README가 포함됩니다.
 
+
 ## Architecture
 ```bash
 githubusersearch
@@ -46,14 +47,23 @@ githubusersearch
 - common: extension, util, constant 등 유틸성 패키지.
 - di: Hilt를 이용한 Dependency Injection 구현.
 
+
+## Unit Test
+- 유저를 검색하는 기능에 대한 단위테스트 코드 작성
+  - API호출 성공 시 유저목록 업데이트 확인
+  - API호출 실패 시 Dialog Queue에 새로운 메세지(오류)가 들어 갔는 지 확인
+
+
 ## Development Environment
 - Android Studio Bumblebee | 2021.1.1 Beta 5
 - JAVA 8
 - Kotlin 1.5.31
 
+
 ## Application Version
 - minSdkVersion: 24
 - targetSdkVersion: 32
+
 
 ## APIs
 - Jetpack Compose 1.1.0-beta03
@@ -66,3 +76,8 @@ githubusersearch
 - Webkit 1.4.0
 - Material Color 0.0.7
 - Palette 1.0.0
+
+## Unit Test APIs
+- Junit 4.13.2
+- jupiter 5.7.0
+- mockito 4.0.0
