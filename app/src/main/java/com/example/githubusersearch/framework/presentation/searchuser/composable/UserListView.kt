@@ -1,4 +1,4 @@
-package com.example.githubusersearch.framework.presentation.search.composable
+package com.example.githubusersearch.framework.presentation.searchuser.composable
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*

@@ -1,4 +1,4 @@
-package com.example.githubusersearch.framework.presentation.search
+package com.example.githubusersearch.framework.presentation.searchuser
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,12 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.githubusersearch.R
-import com.example.githubusersearch.common.composable.GenericDialog
 import com.example.githubusersearch.common.composable.ProcessDialogQueue
-import com.example.githubusersearch.common.extensions.displayToast
-import com.example.githubusersearch.framework.presentation.search.composable.UserListView
-import com.example.githubusersearch.framework.presentation.search.composable.UserSearchBar
+import com.example.githubusersearch.framework.presentation.searchuser.composable.UserListView
+import com.example.githubusersearch.framework.presentation.searchuser.composable.UserSearchBar
 import com.example.githubusersearch.framework.presentation.theme.GithubUserSearchTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

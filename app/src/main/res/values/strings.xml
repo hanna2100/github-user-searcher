@@ -4,9 +4,9 @@
     <string name="watchers">Watchers</string>
     <string name="language">Language</string>
     <string name="contributors">Contributors</string>
-    <string name="createdAt">Created at</string>
-    <string name="updatedAt">Updated at</string>
-    <string name="pushedAt">Pushed at</string>
+    <string name="created_at">Created at</string>
+    <string name="updated_at">Updated at</string>
+    <string name="pushed_at">Pushed at</string>
     <string name="no_search_result">검색 결과가 없습니다.</string>
     <string name="confirm">확인</string>
     <string name="search_result">검색결과</string>

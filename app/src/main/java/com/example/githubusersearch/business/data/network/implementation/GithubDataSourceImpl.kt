@@ -6,7 +6,7 @@ import com.example.githubusersearch.business.data.network.abstraction.GithubData
 import com.example.githubusersearch.business.domain.model.ReadMe
 import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.business.domain.model.User
-import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
+import com.example.githubusersearch.framework.datasource.network.service.GithubRetrofitService
 import com.example.githubusersearch.framework.datasource.network.mappers.*
 import com.example.githubusersearch.framework.datasource.network.request.MarkDownText
 import retrofit2.Response
@@ -18,12 +18,12 @@ class GithubDataSourceImpl
 @Inject
 constructor(
     private val githubRetrofitService: GithubRetrofitService,
-    private val mapperDefaultInfo: UserDefaultInfoDtoMapper,
-    private val mapperDetailInfo: UserDetailInfoDtoMapper,
-    private val mapperRepository: RepositoryMapper,
-    private val mapperRepositoryDetailMapper: RepositoryDetailMapper,
-    private val contributorsDtoMapper: ContributorsDtoMapper,
-    private val readMeDtoMapper: ReadMeDtoMapper,
+    private val userDefaultInfoMapper: UserDefaultInfoMapper,
+    private val userDetailInfoMapper: UserDetailInfoMapper,
+    private val repositoryMapper: RepositoryMapper,
+    private val repositoryDetailMapper: RepositoryDetailMapper,
+    private val contributorsMapper: ContributorsMapper,
+    private val readMeMapper: ReadMeMapper,
     private val renderedMarkdownHTMLMapper: RenderedMarkdownHTMLMapper
 ): GithubDataSource{
 
@@ -38,7 +38,7 @@ constructor(
         return if(response.isSuccessful) {
             val userDtoList = response.body()!!.users
             println(userDtoList)
-            val userList = userDtoList.map { mapperDefaultInfo.mapFromEntity(it) }
+            val userList = userDtoList.map { userDefaultInfoMapper.mapFromEntity(it) }
             Response.success(userList)
         } else {
             Response.error(response.code(), response.errorBody()!!)
@@ -49,7 +49,7 @@ constructor(
         val response = githubRetrofitService.getUser(userName)
         return if(response.isSuccessful) {
             val userDetailInfoDto = response.body()!!
-            Response.success(mapperDetailInfo.mapFromEntity(userDetailInfoDto))
+            Response.success(userDetailInfoMapper.mapFromEntity(userDetailInfoDto))
         } else {
             Response.error(response.code(), response.errorBody()!!)
         }
@@ -59,7 +59,7 @@ constructor(
         val response = githubRetrofitService.getRepositories(userName)
         return if (response.isSuccessful) {
             val repositoryDtoList = response.body()!!
-            val repositoryList = repositoryDtoList.map { mapperRepository.mapFromEntity(it) }
+            val repositoryList = repositoryDtoList.map { repositoryMapper.mapFromEntity(it) }
             Response.success(repositoryList)
         } else {
             Response.error(response.code(), response.errorBody()!!)
@@ -70,7 +70,7 @@ constructor(
         val response = githubRetrofitService.getRepository(owner, repo)
         return if (response.isSuccessful) {
             val repositoryDetailDto = response.body()!!
-            Response.success(mapperRepositoryDetailMapper.mapFromEntity(repositoryDetailDto))
+            Response.success(repositoryDetailMapper.mapFromEntity(repositoryDetailDto))
         } else {
             Response.error(response.code(), response.errorBody()!!)
         }
@@ -80,7 +80,7 @@ constructor(
         val response = githubRetrofitService.getContributors(owner, repo)
         return if (response.isSuccessful) {
             val contributorsDtoList = response.body()?: emptyList()
-            val contributorsDomainList = contributorsDtoList.map { contributorsDtoMapper.mapFromEntity(it) }
+            val contributorsDomainList = contributorsDtoList.map { contributorsMapper.mapFromEntity(it) }
             Response.success(contributorsDomainList)
         } else {
             Response.error(response.code(), response.errorBody()!!)
@@ -92,7 +92,7 @@ constructor(
         val response = githubRetrofitService.getReadMe(owner, repo)
         return if (response.isSuccessful) {
             val readMeDto = response.body()!!
-            val readMe = readMeDtoMapper.mapFromEntity(readMeDto)
+            val readMe = readMeMapper.mapFromEntity(readMeDto)
             Response.success(readMe)
         } else {
             Response.error(response.code(), response.errorBody()!!)

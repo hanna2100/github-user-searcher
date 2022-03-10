@@ -4,7 +4,7 @@ import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.business.util.EntityMapper
 import com.example.githubusersearch.framework.datasource.network.model.ContributorsDto
 
-class ContributorsDtoMapper : EntityMapper<ContributorsDto, Repository.Contributor> {
+class ContributorsMapper : EntityMapper<ContributorsDto, Repository.Contributor> {
     override fun mapFromEntity(entity: ContributorsDto): Repository.Contributor {
         return Repository.Contributor(
             login = entity.login,

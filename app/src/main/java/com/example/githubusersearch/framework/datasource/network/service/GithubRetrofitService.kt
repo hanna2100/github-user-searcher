@@ -1,4 +1,4 @@
-package com.example.githubusersearch.framework.datasource.network.abstraction
+package com.example.githubusersearch.framework.datasource.network.service
 
 import com.example.githubusersearch.framework.datasource.network.model.*
 import com.example.githubusersearch.framework.datasource.network.request.MarkDownText

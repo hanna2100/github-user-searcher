@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import com.example.githubusersearch.common.constant.GITHUB_ACCESS_TOKEN
 import com.example.githubusersearch.common.constant.GITHUB_API_BASIC_URL
 import com.example.githubusersearch.common.util.AuthenticatedHeaderInterceptor
-import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
+import com.example.githubusersearch.framework.datasource.network.service.GithubRetrofitService
 import com.example.githubusersearch.framework.datasource.network.mappers.*
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -77,14 +77,14 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideUserDefaultInfoDtoMapper(): UserDefaultInfoDtoMapper {
-        return UserDefaultInfoDtoMapper()
+    fun provideUserDefaultInfoDtoMapper(): UserDefaultInfoMapper {
+        return UserDefaultInfoMapper()
     }
 
     @Singleton
     @Provides
-    fun provideUserDetailInfoDtoMapper(): UserDetailInfoDtoMapper {
-        return UserDetailInfoDtoMapper()
+    fun provideUserDetailInfoDtoMapper(): UserDetailInfoMapper {
+        return UserDetailInfoMapper()
     }
 
     @Singleton
@@ -101,15 +101,15 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideContributorsDtoMapper(): ContributorsDtoMapper {
-        return ContributorsDtoMapper()
+    fun provideContributorsDtoMapper(): ContributorsMapper {
+        return ContributorsMapper()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @Singleton
     @Provides
-    fun provideReadMeDtoMapper(): ReadMeDtoMapper {
-        return ReadMeDtoMapper()
+    fun provideReadMeDtoMapper(): ReadMeMapper {
+        return ReadMeMapper()
     }
 
     @Singleton

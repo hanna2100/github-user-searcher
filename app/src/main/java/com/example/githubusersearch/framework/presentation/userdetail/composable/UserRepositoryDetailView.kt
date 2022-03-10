@@ -213,15 +213,15 @@ fun RepositoryDetailView(
             }
         )
         SimpleContentBox(
-            headerText = R.string.createdAt,
+            headerText = R.string.created_at,
             tailText = repository.detailInfo?.createdAt?.toSimpleFormat()
         )
         SimpleContentBox(
-            headerText = R.string.updatedAt,
+            headerText = R.string.updated_at,
             tailText = repository.detailInfo?.updatedAt?.toSimpleFormat()
         )
         SimpleContentBox(
-            headerText = R.string.pushedAt,
+            headerText = R.string.pushed_at,
             tailText = repository.detailInfo?.pushedAt?.toSimpleFormat()
         )
     }

@@ -4,7 +4,7 @@ import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.business.util.EntityMapper
 import com.example.githubusersearch.framework.datasource.network.model.UserDefaultInfoDto
 
-class UserDefaultInfoDtoMapper: EntityMapper<UserDefaultInfoDto, User> {
+class UserDefaultInfoMapper: EntityMapper<UserDefaultInfoDto, User> {
     override fun mapFromEntity(entity: UserDefaultInfoDto): User {
         return User(
             defaultInfo = User.DefaultInfo(

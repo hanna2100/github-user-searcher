@@ -102,7 +102,7 @@ fun CircularIndicator() {
 
 @Preview
 @Composable
-fun test() {
+fun LoadingShimmerTest() {
     LoadingShimmer(
         width = 400.dp,
         height = 200.dp,

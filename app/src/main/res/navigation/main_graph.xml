@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/searchUserFragment"
-        android:name="com.example.githubusersearch.framework.presentation.search.SearchUserFragment"
+        android:name="com.example.githubusersearch.framework.presentation.searchuser.SearchUserFragment"
         android:label="SearchUserFragment">
         <action
             android:id="@+id/action_searchUserFragment_to_userDetailFragment"

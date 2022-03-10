@@ -9,7 +9,7 @@ import com.example.githubusersearch.framework.datasource.network.model.ReadMeDto
 import java.nio.charset.StandardCharsets
 
 @RequiresApi(Build.VERSION_CODES.O)
-class ReadMeDtoMapper: EntityMapper<ReadMeDto, ReadMe> {
+class ReadMeMapper: EntityMapper<ReadMeDto, ReadMe> {
 
     override fun mapFromEntity(entity: ReadMeDto): ReadMe {
         val decodedContent = Base64.decode(entity.content, Base64.NO_WRAP)

@@ -7,7 +7,7 @@ import com.example.githubusersearch.business.interactors.searchuser.SearchUserIn
 import com.example.githubusersearch.business.interactors.userdetail.UserDetailInteractors
 import com.example.githubusersearch.common.util.ResourcesProvider
 import com.example.githubusersearch.common.util.ResourcesProviderImpl
-import com.example.githubusersearch.framework.datasource.network.abstraction.GithubRetrofitService
+import com.example.githubusersearch.framework.datasource.network.service.GithubRetrofitService
 import com.example.githubusersearch.framework.datasource.network.mappers.*
 import com.example.githubusersearch.framework.presentation.BaseApplication
 import dagger.Module
@@ -31,12 +31,12 @@ object AppModule {
     @Provides
     fun provideGithubDataSource(
         githubRetrofitService: GithubRetrofitService,
-        mapperDefaultInfo: UserDefaultInfoDtoMapper,
-        mapperDetailInfo: UserDetailInfoDtoMapper,
+        mapperDefaultInfo: UserDefaultInfoMapper,
+        mapperDetailInfo: UserDetailInfoMapper,
         repositoryMapper: RepositoryMapper,
         repositoryDetailMapper: RepositoryDetailMapper,
-        contributorsDtoMapper: ContributorsDtoMapper,
-        readMeDtoMapper: ReadMeDtoMapper,
+        contributorsMapper: ContributorsMapper,
+        readMeMapper: ReadMeMapper,
         renderedMarkdownHTMLMapper: RenderedMarkdownHTMLMapper
     ): GithubDataSource {
         return GithubDataSourceImpl(
@@ -45,8 +45,8 @@ object AppModule {
             mapperDetailInfo,
             repositoryMapper,
             repositoryDetailMapper,
-            contributorsDtoMapper,
-            readMeDtoMapper,
+            contributorsMapper,
+            readMeMapper,
             renderedMarkdownHTMLMapper
         )
     }

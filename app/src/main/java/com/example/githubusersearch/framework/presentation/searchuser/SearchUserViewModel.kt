@@ -1,4 +1,4 @@
-package com.example.githubusersearch.framework.presentation.search
+package com.example.githubusersearch.framework.presentation.searchuser
 
 import android.view.View
 import androidx.compose.runtime.mutableStateListOf
