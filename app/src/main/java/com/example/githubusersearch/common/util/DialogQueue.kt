@@ -32,4 +32,8 @@ class DialogQueue {
                 .build()
         )
     }
+
+    fun getQueueSize(): Int {
+        return queue.value.size
+    }
 }

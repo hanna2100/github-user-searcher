@@ -20,7 +20,6 @@ class SearchUserUsecase (
         val response = githubRetrofitService.searchUsers(query, sort, order, perPage, page)
         return if(response.isSuccessful) {
             val userDtoList = response.body()!!.users
-            println(userDtoList)
             val userList = userDtoList.map { userDefaultInfoMapper.mapFromEntity(it) }
             Response.success(userList)
         } else {

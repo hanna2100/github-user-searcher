@@ -20,6 +20,8 @@ buildscript {
         palette_version = '1.0.0'
         okhttp3_version = '4.9.3'
         webkit_version = '1.4.0'
+        jupiter_version = '5.7.0'
+        mokito_version = '4.0.0'
     }
 
     dependencies {

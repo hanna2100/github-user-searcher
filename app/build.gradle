@@ -42,6 +42,9 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
     }
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
 }
 
 dependencies {
@@ -64,6 +67,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation "androidx.webkit:webkit:$webkit_version"
+    implementation 'androidx.test:core-ktx:1.4.0'
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -76,6 +80,10 @@ dependencies {
     implementation "androidx.palette:palette:$palette_version"
 
     testImplementation "junit:junit:$junit_version"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiter_version"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:$jupiter_version"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$mokito_version"
+
     androidTestImplementation "androidx.test.ext:junit:$junit_ext_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
