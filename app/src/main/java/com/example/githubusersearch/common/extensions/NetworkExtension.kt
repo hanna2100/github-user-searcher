@@ -1,6 +1,7 @@
 package com.example.githubusersearch.common.extensions
 
 import com.example.githubusersearch.business.domain.model.NetworkError
+import com.example.githubusersearch.business.domain.model.NetworkError.Companion.setCode
 import com.google.gson.Gson
 import retrofit2.HttpException
 import retrofit2.Response
@@ -17,7 +18,9 @@ suspend fun<T, R> Response<T>.subscribe(
             onSuccess(body()!!)
         }
         is400Error -> {
-            val error = Gson().fromJson(errorBody()!!.string(), NetworkError::class.java)
+            val error = Gson()
+                .fromJson(errorBody()!!.string(), NetworkError::class.java)
+                .setCode(code())
             onError(error)
         }
         else -> {

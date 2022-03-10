@@ -8,7 +8,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -18,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.navArgs
+import com.example.githubusersearch.common.composable.ProcessDialogQueue
 import com.example.githubusersearch.framework.presentation.theme.GithubUserSearchTheme
 import com.example.githubusersearch.framework.presentation.userdetail.composable.CollapsableToolbar
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -96,6 +96,9 @@ class UserDetailFragment: Fragment() {
                             isReadMeMarkdownRenderReady = isReadMeMarkdownRenderReady
                         )
                     }
+                    ProcessDialogQueue(
+                        viewModel.dialogQueue.queue.value
+                    )
                 }
             }
         }

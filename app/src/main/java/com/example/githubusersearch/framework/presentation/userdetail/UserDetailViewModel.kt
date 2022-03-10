@@ -11,13 +11,15 @@ import androidx.palette.graphics.Palette
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import com.example.githubusersearch.business.domain.model.ReadMe
+import com.example.githubusersearch.R
 import com.example.githubusersearch.business.domain.model.Repository
 import com.example.githubusersearch.business.domain.model.Repository.Companion.setContributors
 import com.example.githubusersearch.business.domain.model.Repository.Companion.setMarkdownHTML
 import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.business.interactors.userdetail.UserDetailInteractors
 import com.example.githubusersearch.common.extensions.subscribe
+import com.example.githubusersearch.common.util.DialogQueue
+import com.example.githubusersearch.common.util.ResourcesProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -25,7 +27,8 @@ import javax.inject.Inject
 class UserDetailViewModel
 @Inject
 constructor(
-    private val userDetailInteractors: UserDetailInteractors
+    private val userDetailInteractors: UserDetailInteractors,
+    private val resourcesProvider: ResourcesProvider
 ) : ViewModel() {
 
     var isDarkImage = mutableStateOf(false)
@@ -39,6 +42,8 @@ constructor(
     val repositoryDetail = mutableStateOf(Repository.getEmptyRepository())
     var isLoadingRepositoryDetail = mutableStateOf(false)
     var isReadMeMarkdownRenderReady = mutableStateOf(false)
+
+    val dialogQueue = DialogQueue()
 
     fun moveToSearchUserFragment(view: View?) {
         view?.findNavController()?.popBackStack()
@@ -70,13 +75,15 @@ constructor(
             onSuccess = {
                 user.value = it
                 isLoadingUser.value = false
-                println("getUser onSuccess $it")
             },
             onError = {
+                this::getUser.name
                 isLoadingUser.value = false
+                loadErrorDialog(this::getUser.name, it.message)
             },
             onFailure = {
                 isLoadingUser.value = false
+                loadErrorDialog(this::getUser.name, it.message())
             }
         )
     }
@@ -88,52 +95,55 @@ constructor(
             onSuccess = {
                 repositories.value = it
                 isLoadingRepositories.value = false
-                println("getRepositories onSuccess ${it.size}")
             },
             onError = {
-                println("getRepositories onError $it")
                 isLoadingRepositories.value = false
+                loadErrorDialog(this::getRepositories.name, it.message)
             },
             onFailure = {
-                println("getRepositories onFailure $it")
                 isLoadingRepositories.value = false
+                loadErrorDialog(this::getRepositories.name, it.message())
             }
         )
     }
 
     fun initLoadingValue() {
-        isLoadingRepositoryDetail.value = true
         isReadMeMarkdownRenderReady.value = false
+        isLoadingRepositoryDetail.value = true
     }
 
     suspend fun getRepository(owner: String, repo: String) {
+        isLoadingRepositoryDetail.value = true
         userDetailInteractors.getRepository(owner, repo).subscribe(
             onSuccess = {
                 repositoryDetail.value = it
                 isLoadingRepositoryDetail.value = false
-                println("getRepository onSuccess $it")
             },
             onError = {
                 isLoadingRepositoryDetail.value = false
-                println("getRepository onError $it")
+                loadErrorDialog(this::getRepository.name, it.message)
             },
             onFailure = {
                 isLoadingRepositoryDetail.value = false
-                println("getRepository onFailure $it")
+                loadErrorDialog(this::getRepository.name, it.message())
             }
         )
     }
 
     suspend fun getContributors(owner: String, repo: String) {
+        isLoadingRepositoryDetail.value = true
         userDetailInteractors.getContributors(owner, repo).subscribe(
             onSuccess = {
                 repositoryDetail.value = repositoryDetail.value.setContributors(it)
+                isLoadingRepositoryDetail.value = false
             },
             onError = {
-
+                isLoadingRepositoryDetail.value = false
+                loadErrorDialog(this::getContributors.name, it.message)
             },
             onFailure = {
-
+                isLoadingRepositoryDetail.value = false
+                loadErrorDialog(this::getContributors.name, it.message())
             }
         )
     }
@@ -143,15 +153,21 @@ constructor(
         owner: String,
         repo: String,
     ) {
+        isLoadingRepositoryDetail.value = true
         userDetailInteractors.getReadMe(owner, repo).subscribe(
             onSuccess = {
+                isLoadingRepositoryDetail.value = false
                 renderMarkDown(it.content)
             },
             onError = {
-
+                isLoadingRepositoryDetail.value = false
+                if (it.code != 404) { //READ ME 가 없는 경우 제외
+                    loadErrorDialog(this::getReadMe.name, it.message)
+                }
             },
             onFailure = {
-
+                isLoadingRepositoryDetail.value = false
+                loadErrorDialog(this::getReadMe.name, it.message())
             }
         )
     }
@@ -163,12 +179,18 @@ constructor(
                 isReadMeMarkdownRenderReady.value = true
             },
             onError = {
-
+                loadErrorDialog(this::renderMarkDown.name, it.message)
             },
             onFailure = {
-
+                loadErrorDialog(this::renderMarkDown.name, it.message())
             }
         )
     }
 
+    private fun loadErrorDialog(methodName: String, description: String?) {
+        dialogQueue.appendErrorMessage(
+            "$methodName ${resourcesProvider.getString(R.string.error)}",
+            description?: ""
+        )
+    }
 }

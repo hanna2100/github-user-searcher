@@ -45,7 +45,7 @@ constructor(
             onSuccess = {
                 if (it.isEmpty()) {
                     dialogQueue.appendErrorMessage(
-                        resourcesProvider.getString(R.string.user_search),
+                        resourcesProvider.getString(R.string.search_result),
                         resourcesProvider.getString(R.string.no_search_result)
                     )
                 } else {
@@ -55,14 +55,14 @@ constructor(
             },
             onError = {
                 dialogQueue.appendErrorMessage(
-                    resourcesProvider.getString(R.string.user_search),
-                    it.message
+                    resourcesProvider.getString(R.string.search_result),
+                    it.message?: ""
                 )
                 loading.value = false
             },
             onFailure = {
                 dialogQueue.appendErrorMessage(
-                    resourcesProvider.getString(R.string.user_search),
+                    resourcesProvider.getString(R.string.search_result),
                     it.message()
                 )
                 loading.value = false
