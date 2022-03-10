@@ -2,7 +2,7 @@ package com.example.githubusersearch.presentation.searchuser
 
 import android.content.Context
 import com.example.githubusersearch.R
-import com.example.githubusersearch.business.interactors.SearchUserUsecase
+import com.example.githubusersearch.business.interactors.usecase.SearchUserUsecase
 import com.example.githubusersearch.business.interactors.searchuser.SearchUserInteractors
 import com.example.githubusersearch.common.util.ResourcesProvider
 import com.example.githubusersearch.common.util.ResourcesProviderImpl

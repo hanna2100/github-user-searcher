@@ -1,4 +1,4 @@
-package com.example.githubusersearch.business.interactors
+package com.example.githubusersearch.business.interactors.usecase
 
 import com.example.githubusersearch.business.domain.model.User
 import com.example.githubusersearch.framework.datasource.network.mappers.UserDefaultInfoMapper

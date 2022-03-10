@@ -174,7 +174,7 @@ constructor(
 
     suspend fun renderMarkDown(content: String) {
         isLoadingReadMeMarkdown.value = true
-        userDetailInteractors.renderMarkDown(content).subscribe(
+        userDetailInteractors.renderMarkdown(content).subscribe(
             onSuccess = {
                 repositoryDetail.value = repositoryDetail.value.setMarkdownHTML(it)
                 isLoadingReadMeMarkdown.value = false

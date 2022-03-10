@@ -1,7 +1,7 @@
 package com.example.githubusersearch.business.interactors.searchuser
 
 import com.example.githubusersearch.business.domain.model.User
-import com.example.githubusersearch.business.interactors.SearchUserUsecase
+import com.example.githubusersearch.business.interactors.usecase.SearchUserUsecase
 import com.example.githubusersearch.common.constant.SEARCH_USER_LIST_PER_PAGE
 import retrofit2.Response
 

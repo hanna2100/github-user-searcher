@@ -1,10 +1,8 @@
 package com.example.githubusersearch.di
 
 import android.content.Context
-import com.example.githubusersearch.business.data.network.abstraction.GithubDataSource
-import com.example.githubusersearch.business.data.network.implementation.GithubDataSourceImpl
-import com.example.githubusersearch.business.interactors.SearchUserUsecase
 import com.example.githubusersearch.business.interactors.searchuser.SearchUserInteractors
+import com.example.githubusersearch.business.interactors.usecase.*
 import com.example.githubusersearch.business.interactors.userdetail.UserDetailInteractors
 import com.example.githubusersearch.common.util.ResourcesProvider
 import com.example.githubusersearch.common.util.ResourcesProviderImpl
@@ -30,28 +28,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideGithubDataSource(
-        githubRetrofitService: GithubRetrofitService,
-        mapperDetailInfo: UserDetailInfoMapper,
-        repositoryMapper: RepositoryMapper,
-        repositoryDetailMapper: RepositoryDetailMapper,
-        contributorsMapper: ContributorsMapper,
-        readMeMapper: ReadMeMapper,
-        renderedMarkdownHTMLMapper: RenderedMarkdownHTMLMapper
-    ): GithubDataSource {
-        return GithubDataSourceImpl(
-            githubRetrofitService,
-            mapperDetailInfo,
-            repositoryMapper,
-            repositoryDetailMapper,
-            contributorsMapper,
-            readMeMapper,
-            renderedMarkdownHTMLMapper
-        )
-    }
-
-    @Singleton
-    @Provides
     fun provideSearchUserInteractors(
         searchUserUsecase: SearchUserUsecase
     ): SearchUserInteractors {
@@ -61,9 +37,21 @@ object AppModule {
     @Singleton
     @Provides
     fun provideUserDetailInteractors(
-        githubDataSource: GithubDataSource
+        getUserUsecase: GetUserUsecase,
+        getRepositoriesUsecase: GetRepositoriesUsecase,
+        getRepositoryUsecase: GetRepositoryUsecase,
+        getContributorsUsecase: GetContributorsUsecase,
+        getRedMeUsecase: GetRedMeUsecase,
+        renderMarkdownUsecase: RenderMarkdownUsecase
     ): UserDetailInteractors {
-        return UserDetailInteractors(githubDataSource)
+        return UserDetailInteractors(
+            getUserUsecase,
+            getRepositoriesUsecase,
+            getRepositoryUsecase,
+            getContributorsUsecase,
+            getRedMeUsecase,
+            renderMarkdownUsecase
+        )
     }
 
     @Singleton
@@ -71,6 +59,7 @@ object AppModule {
     fun provideResourcesProvider(@ApplicationContext app: Context): ResourcesProvider {
         return ResourcesProviderImpl(app)
     }
+
 
     @Singleton
     @Provides
@@ -81,4 +70,57 @@ object AppModule {
         return SearchUserUsecase(githubRetrofitService, userDefaultInfoMapper)
     }
 
+    @Singleton
+    @Provides
+    fun provideGetUserUsecase(
+        githubRetrofitService: GithubRetrofitService,
+        userDetailInfoMapper: UserDetailInfoMapper
+    ): GetUserUsecase {
+        return GetUserUsecase(githubRetrofitService, userDetailInfoMapper)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetRepositoriesUsecase(
+        githubRetrofitService: GithubRetrofitService,
+        repositoryMapper: RepositoryMapper
+    ): GetRepositoriesUsecase {
+        return GetRepositoriesUsecase(githubRetrofitService, repositoryMapper)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetRepositoryUsecase(
+        githubRetrofitService: GithubRetrofitService,
+        repositoryDetailMapper: RepositoryDetailMapper
+    ): GetRepositoryUsecase {
+        return GetRepositoryUsecase(githubRetrofitService, repositoryDetailMapper)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetContributorsUsecase(
+        githubRetrofitService: GithubRetrofitService,
+        contributorsMapper: ContributorsMapper
+    ): GetContributorsUsecase {
+        return GetContributorsUsecase(githubRetrofitService, contributorsMapper)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetRedMeUsecase(
+        githubRetrofitService: GithubRetrofitService,
+        readMeMapper: ReadMeMapper
+    ): GetRedMeUsecase {
+        return GetRedMeUsecase(githubRetrofitService, readMeMapper)
+    }
+
+    @Singleton
+    @Provides
+    fun provideRenderMarkdownUsecase(
+        githubRetrofitService: GithubRetrofitService,
+        renderedMarkdownHTMLMapper: RenderedMarkdownHTMLMapper
+    ): RenderMarkdownUsecase {
+        return RenderMarkdownUsecase(githubRetrofitService, renderedMarkdownHTMLMapper)
+    }
 }
