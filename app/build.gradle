@@ -70,6 +70,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+    implementation "com.squareup.okhttp3:mockwebserver:$okhttp3_version"
 
     implementation "io.coil-kt:coil-compose:$coil_version"
     implementation "androidx.palette:palette:$palette_version"

@@ -7,14 +7,6 @@ import retrofit2.Response
 
 interface GithubDataSource {
 
-    suspend fun searchUsers(
-        query: String,
-        sort: String,
-        order: String,
-        perPage: Int,
-        page: Int
-    ): Response<List<User>>
-
     suspend fun getUser(userName: String): Response<User>
 
     suspend fun getRepositories(userName: String): Response<List<Repository>>

@@ -18,7 +18,6 @@ class GithubDataSourceImpl
 @Inject
 constructor(
     private val githubRetrofitService: GithubRetrofitService,
-    private val userDefaultInfoMapper: UserDefaultInfoMapper,
     private val userDetailInfoMapper: UserDetailInfoMapper,
     private val repositoryMapper: RepositoryMapper,
     private val repositoryDetailMapper: RepositoryDetailMapper,
@@ -26,24 +25,6 @@ constructor(
     private val readMeMapper: ReadMeMapper,
     private val renderedMarkdownHTMLMapper: RenderedMarkdownHTMLMapper
 ): GithubDataSource{
-
-    override suspend fun searchUsers(
-        query: String,
-        sort: String,
-        order: String,
-        perPage: Int,
-        page: Int
-    ): Response<List<User>> {
-        val response = githubRetrofitService.searchUsers(query, sort, order, perPage, page)
-        return if(response.isSuccessful) {
-            val userDtoList = response.body()!!.users
-            println(userDtoList)
-            val userList = userDtoList.map { userDefaultInfoMapper.mapFromEntity(it) }
-            Response.success(userList)
-        } else {
-            Response.error(response.code(), response.errorBody()!!)
-        }
-    }
 
     override suspend fun getUser(userName: String): Response<User> {
         val response = githubRetrofitService.getUser(userName)

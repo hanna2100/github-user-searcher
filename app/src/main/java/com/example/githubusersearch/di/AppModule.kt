@@ -3,6 +3,7 @@ package com.example.githubusersearch.di
 import android.content.Context
 import com.example.githubusersearch.business.data.network.abstraction.GithubDataSource
 import com.example.githubusersearch.business.data.network.implementation.GithubDataSourceImpl
+import com.example.githubusersearch.business.interactors.SearchUserUsecase
 import com.example.githubusersearch.business.interactors.searchuser.SearchUserInteractors
 import com.example.githubusersearch.business.interactors.userdetail.UserDetailInteractors
 import com.example.githubusersearch.common.util.ResourcesProvider
@@ -31,7 +32,6 @@ object AppModule {
     @Provides
     fun provideGithubDataSource(
         githubRetrofitService: GithubRetrofitService,
-        mapperDefaultInfo: UserDefaultInfoMapper,
         mapperDetailInfo: UserDetailInfoMapper,
         repositoryMapper: RepositoryMapper,
         repositoryDetailMapper: RepositoryDetailMapper,
@@ -41,7 +41,6 @@ object AppModule {
     ): GithubDataSource {
         return GithubDataSourceImpl(
             githubRetrofitService,
-            mapperDefaultInfo,
             mapperDetailInfo,
             repositoryMapper,
             repositoryDetailMapper,
@@ -54,9 +53,9 @@ object AppModule {
     @Singleton
     @Provides
     fun provideSearchUserInteractors(
-        githubDataSource: GithubDataSource
+        searchUserUsecase: SearchUserUsecase
     ): SearchUserInteractors {
-        return SearchUserInteractors(githubDataSource)
+        return SearchUserInteractors(searchUserUsecase)
     }
 
     @Singleton
@@ -72,4 +71,14 @@ object AppModule {
     fun provideResourcesProvider(@ApplicationContext app: Context): ResourcesProvider {
         return ResourcesProviderImpl(app)
     }
+
+    @Singleton
+    @Provides
+    fun provideSearchUserUsecase(
+        githubRetrofitService: GithubRetrofitService,
+        userDefaultInfoMapper: UserDefaultInfoMapper
+    ): SearchUserUsecase {
+        return SearchUserUsecase(githubRetrofitService, userDefaultInfoMapper)
+    }
+
 }
